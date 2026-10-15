@@ -1,10 +1,48 @@
 {
   "name": "@terse/core",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Terse language core: lexer, parser, IR and validator. No React dependency.",
+  "license": "MIT",
+  "author": "AVYUKT TECH LABS",
+  "homepage": "https://terse-ui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AVYUKT-TECH-LABS/terse.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/AVYUKT-TECH-LABS/terse/issues",
+  "keywords": [
+    "terse",
+    "ui",
+    "llm",
+    "agents",
+    "react",
+    "shadcn",
+    "tailwind",
+    "vite",
+    "compiler"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
-  "dependencies": {  }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "SPEC.md",
+    "components.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {},
+  "scripts": {
+    "prepack": "cp ../../spec/SPEC.md ../../spec/components.md ."
+  }
 }

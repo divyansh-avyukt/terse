@@ -18,14 +18,12 @@ What the app does:
 
 ## Setup (do this first, exactly)
 Terse is a presentation-only UI language that compiles .terse files to React TSX
-(shadcn/ui + Tailwind) via a Vite plugin. It is checked out locally at
-/Users/divyansh/projects/terse and is not published to npm.
+(shadcn/ui + Tailwind) via a Vite plugin.
 
-1. Read /Users/divyansh/projects/terse/docs/getting-started.md and follow every step in
-   order, scaffolding into this directory (`pnpm create vite@latest . ...`) instead of
-   `my-app`. Run `pnpm install && pnpm build` in the Terse checkout first.
-2. Copy /Users/divyansh/projects/terse/docs/CLAUDE.template.md to ./CLAUDE.md, then read
-   /Users/divyansh/projects/terse/spec/SPEC.md and spec/components.md in full. Those are the
+1. Follow https://github.com/AVYUKT-TECH-LABS/terse/blob/main/docs/getting-started.md
+   step by step, scaffolding into this directory (`pnpm create vite@latest . ...`).
+2. Copy that repo's docs/CLAUDE.template.md to ./CLAUDE.md. It imports the spec from
+   node_modules/@terseui/core; read SPEC.md and components.md there in full. Those are the
    only components and props that exist; don't invent any.
 3. Prove the setup works before building features: a throwaway src/views/pages/Home.terse +
    src/pages/HomePage.tsx, then `pnpm exec tsc -b` and `pnpm build` must pass. Run `git init`

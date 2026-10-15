@@ -1,10 +1,46 @@
 {
   "name": "@terse/style-tailwind",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Terse style adapter that maps design tokens to Tailwind classes.",
+  "license": "MIT",
+  "author": "AVYUKT TECH LABS",
+  "homepage": "https://terse-ui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AVYUKT-TECH-LABS/terse.git",
+    "directory": "packages/style-tailwind"
+  },
+  "bugs": "https://github.com/AVYUKT-TECH-LABS/terse/issues",
+  "keywords": [
+    "terse",
+    "ui",
+    "llm",
+    "agents",
+    "react",
+    "shadcn",
+    "tailwind",
+    "vite",
+    "compiler"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
-  "dependencies": { "@terse/core": "workspace:*", "@terse/compiler": "workspace:*" }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@terse/core": "workspace:*",
+    "@terse/compiler": "workspace:*"
+  }
 }

@@ -1,5 +1,5 @@
 // Copy that isn't measured: install snippets, the agent prompt and CLAUDE.md excerpt.
-export const GITHUB = 'https://github.com/avyuktlabs/terse'
+export const GITHUB = 'https://github.com/AVYUKT-TECH-LABS/terse'
 
 export const INSTALL = `pnpm add -D @terse/vite-plugin \\
   @terse/adapter-shadcn @terse/style-tailwind`

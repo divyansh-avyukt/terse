@@ -3,14 +3,6 @@
 This sets up a Vite + React + TypeScript app with shadcn/ui, Tailwind v4 and Terse. Every step was
 run end to end in a fresh folder outside this repo.
 
-Terse isn't published yet, so the app **links** the packages from your local checkout
-(`TERSE=/Users/divyansh/projects/terse`). Build that checkout once first, and again after you pull or
-change it:
-
-```sh
-cd $TERSE && pnpm install && pnpm build
-```
-
 ## 1. Vite + React + TS
 
 ```sh
@@ -57,7 +49,7 @@ neutral, so chart series render in greys. For coloured charts, pick another pres
 ## 4. Terse
 
 ```sh
-pnpm add -D link:$TERSE/packages/vite-plugin link:$TERSE/packages/adapter-shadcn link:$TERSE/packages/style-tailwind
+pnpm add -D @terseui/vite-plugin @terseui/adapter-shadcn @terseui/style-tailwind
 ```
 
 `terse.config.ts` (project root) selects the component and style adapters:
@@ -118,12 +110,9 @@ pnpm build
 
 ## Editor
 
-Install the VS Code extension for highlighting and live errors:
-`node $TERSE/editors/vscode/pack.mjs && code --install-extension $TERSE/editors/vscode/terse.vsix --force`
+Install the Terse VS Code extension for highlighting and live errors (build it from `editors/vscode` in the repo until it's on the Marketplace).
 
 ## Gotchas
 
-- **After you change or pull `$TERSE`**, run `pnpm build` there, then restart `pnpm dev` in the app.
-  The plugin and adapters are loaded from their `dist/`.
 - **Missing shadcn component**: an error like `Failed to resolve import "@/components/ui/alert"`
   means a component the view uses wasn't added. Run `pnpm dlx shadcn@latest add <name>`.

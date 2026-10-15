@@ -4,8 +4,8 @@ This app's UI is written in **Terse**: `.terse` files that compile at build time
 (shadcn/ui + Tailwind). The language spec and component reference are imported below. Follow them
 exactly.
 
-@/Users/divyansh/projects/terse/spec/SPEC.md
-@/Users/divyansh/projects/terse/spec/components.md
+@node_modules/@terseui/core/SPEC.md
+@node_modules/@terseui/core/components.md
 
 ## How UI is built here
 
