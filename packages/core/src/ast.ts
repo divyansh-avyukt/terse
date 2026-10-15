@@ -2,7 +2,8 @@ import type { Loc } from './errors.js'
 
 export type Literal = string | number | boolean
 export type LitValue = { kind: 'lit'; value: Literal } & Loc
-export type RefValue = { kind: 'ref'; path: string[] } & Loc
+/** `@fn(@a, 1)`: a handler reference with arguments (refs or literals, no expressions). */
+export type RefValue = { kind: 'ref'; path: string[]; args?: Value[] } & Loc
 export type Value = LitValue | RefValue
 
 export interface Attr extends Loc {
@@ -22,6 +23,7 @@ export interface EachNode extends Loc {
   type: 'each'
   source: RefValue
   as: string
+  key?: string[] // `key=id`: React key from this field of the item instead of its index
   children: Node[]
 }
 
@@ -38,6 +40,7 @@ export type Node = ElementNode | EachNode | IfNode
 export interface Use extends Loc {
   name: string
   from: string
+  named?: boolean // `use { Name } from`, vs a default import
 }
 
 export interface Ast {

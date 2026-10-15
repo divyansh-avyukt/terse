@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@terseui/adapter-shadcn": "^0.2.0",
-    "@terseui/style-tailwind": "^0.2.0",
-    "@terseui/vite-plugin": "^0.2.0",
+    "@terseui/adapter-shadcn": "^0.3.0",
+    "@terseui/style-tailwind": "^0.3.0",
+    "@terseui/vite-plugin": "^0.3.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

@@ -25,6 +25,9 @@ const SNIPPETS: Record<string, string> = {
   image: `image "/logo.png" alt="Logo" size=sm`,
   link: `link "Docs" "https://example.com" tone=muted`,
   separator: `separator`,
+  togglegroup: `props status, setStatus\ntogglegroup value=@status on=@setStatus variant=outline\n  toggle "All" value=all\n  toggle "Open" value=open icon=circle`,
+  toggle: `props tags, setTags\ntogglegroup multiple=true value=@tags on=@setTags\n  toggle "Bug"\n  toggle "Docs" disabled=true`,
+  form: `props onAdd, col\nform on=@onAdd(@col.id) gap=sm\n  input "Task" name=title\n  button "Add" type=submit`,
   band: `band id=start tone=inverse pad=xl size=md align=center\n  heading "Ship **less** code" size=xl align=center`,
   code: `props snippet\ncol\n  code "page \\"Hi\\"" lang=terse title="hello.terse"\n  code @snippet lang=tsx`,
   icon: `icon cloud-rain size=lg`,
@@ -164,6 +167,49 @@ describe('inline markup and links', () => {
     const code = tsx('button "GitHub" href="https://github.com/x" variant=outline size=lg')
     expect(code).toContain('import { buttonVariants } from "@/components/ui/button"')
     expect(code).toContain('<a href="https://github.com/x" className={buttonVariants({ variant: "outline", size: "lg" }) + " w-fit"} target="_blank" rel="noreferrer">')
+  })
+})
+
+describe('0.3: handler arguments, keyed each, named imports', () => {
+  it('turns @fn(args) into a callback that forwards what the component passes', () => {
+    const code = tsx('props move, setQty, task\nrow\n  button "Next" on=@move(@task.id, 1)\n  input "Qty" on=@setQty(@task.id)')
+    expect(code).toContain('onClick={((...a: any[]) => move?.(task?.id, 1, ...a))}')
+    expect(code).toContain('onChange={(e) => ((...a: any[]) => setQty?.(task?.id, ...a))?.(e.target.value)}')
+  })
+
+  it('keys each items by a field instead of the index', () => {
+    expect(tsx('props tasks\ncol\n  each @tasks as t key=id\n    text @t.title')).toContain('<p key={t?.id} className="text-sm">')
+    expect(tsx('props tasks\ncol\n  each @tasks as t\n    text @t.title')).toContain('key={i}')
+  })
+
+  it('emits named imports grouped by module, next to default ones', () => {
+    const code = tsx('use { Kanban, KanbanItem } from "@/components/kanban"\nuse Avatar from "@/components/Avatar"\nKanban\n  KanbanItem\n  Avatar')
+    expect(code).toContain('import { Kanban, KanbanItem } from "@/components/kanban"')
+    expect(code).toContain('import Avatar from "@/components/Avatar"')
+  })
+})
+
+describe('0.3: toggle buttons', () => {
+  it('pressed=@x switches solid/outline and sets aria-pressed', () => {
+    const code = tsx('props f\nbutton @f.label pressed=@f.active on=@f.toggle')
+    expect(code).toContain('variant={f?.active ? "default" : "outline"} aria-pressed={!!f?.active}')
+  })
+  it('pressed uses the given variant when not pressed', () => {
+    expect(tsx('props f\nbutton "Grid" pressed=@f.grid variant=ghost')).toContain('variant={f?.grid ? "default" : "ghost"}')
+  })
+  it('variant=@x is passed through at runtime, narrowed to the valid set', () => {
+    expect(tsx('props v\nbutton "Go" variant=@v')).toContain('variant={v as "default" | "outline"')
+  })
+})
+
+describe('0.3: image fill, card href', () => {
+  it('image size=fill ratio=square fills its container at a fixed ratio', () => {
+    expect(tsx('props p\nimage @p.img alt=@p.name size=fill ratio=square')).toContain('className="rounded-md object-cover w-full h-full aspect-square"')
+  })
+  it('card href wraps the card in a focusable link that carries the grid span', () => {
+    const code = tsx('props p\ngrid cols=3\n  card @p.name href=@p.url span=2\n    text "x"')
+    expect(code).toContain('<a href={p?.url} className="block rounded-xl outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 lg:col-span-2">')
+    expect(code).toContain('<Card className="cursor-pointer transition-colors hover:bg-accent/50 h-full">')
   })
 })
 

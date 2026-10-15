@@ -4,6 +4,7 @@ import { lex, type Line, type Token } from './lexer.js'
 
 const IDENT = /^[A-Za-z_$][\w$]*$/
 const NAME = /^[A-Za-z][\w-]*$/
+type RefToken = Extract<Token, { kind: 'ref' }>
 
 /** Parse source into an AST. Throws TerseError on the first syntax error. */
 export function parse(src: string, file?: string): Ast {
@@ -26,13 +27,21 @@ export function parse(src: string, file?: string): Ast {
     if (keyword === 'use' || keyword === 'props') {
       if (ln.level > 0) err(`'${keyword}' must be at the top level`, at)
       if (keyword === 'use') {
-        const [name, from, path, extra] = rest
-        if (name?.kind !== 'word' || !NAME.test(name.value) || from?.kind !== 'word' || from.value !== 'from' || path?.kind !== 'string' || extra) {
-          err(`expected: use Name from "path"`, at)
+        // use Name from "path"   |   use { A, B } from "path"
+        const fromAt = rest.findIndex((t) => t.kind === 'word' && t.value === 'from')
+        const names = fromAt > 0 ? rest.slice(0, fromAt) : []
+        const path = rest[fromAt + 1]
+        if (!names.length || !names.every((t) => t.kind === 'word') || path?.kind !== 'string' || rest.length > fromAt + 2) {
+          err(`expected: use Name from "path"  (or: use { A, B } from "path")`, at)
         }
-        const n = (name as Token & { value: string }).value
-        if (!/^[A-Z]/.test(n)) err(`imported component '${n}' must start with a capital letter`, name)
-        ast.uses.push({ name: n, from: (path as { value: string }).value, line: ln.line, col: name.col })
+        const joined = names.map((t) => (t as { value: string }).value).join(' ')
+        const named = /^\{.*\}$/.test(joined)
+        const list = named ? joined.slice(1, -1).split(',').map((s) => s.trim()).filter(Boolean) : [joined]
+        if (!list.length || (!named && names.length > 1)) err(`expected: use Name from "path"  (or: use { A, B } from "path")`, at)
+        for (const n of list) {
+          if (!NAME.test(n) || !/^[A-Z]/.test(n)) err(`imported component '${n}' must start with a capital letter`, names[0])
+          ast.uses.push({ name: n, from: (path as { value: string }).value, named: named || undefined, line: ln.line, col: names[0].col })
+        }
       } else {
         for (const t of rest) {
           if (t.kind !== 'word') err(`expected prop names after 'props', found ${describe(t)}`, t)
@@ -57,17 +66,23 @@ export function parse(src: string, file?: string): Ast {
       stack.push({ level: ln.level, children })
       continue
     } else if (keyword === 'each') {
-      const [src, as, name, extra] = rest
-      if (src?.kind !== 'ref' || as?.kind !== 'word' || as.value !== 'as' || name?.kind !== 'word' || !IDENT.test(name.value) || extra) {
-        err(`expected: each @list as item`, at)
+      const [src, as, name, keyAttr, extra] = rest
+      if (src?.kind !== 'ref' || src.args || as?.kind !== 'word' || as.value !== 'as' || name?.kind !== 'word' || !IDENT.test(name.value) || extra) {
+        err(`expected: each @list as item  (optionally: key=id)`, at)
       }
-      node = { type: 'each', source: ref(src as RefValue & Token), as: (name as { value: string }).value, children: [], ...at }
+      let key: string[] | undefined
+      if (keyAttr) {
+        const v = keyAttr.kind === 'attr' && keyAttr.key === 'key' && keyAttr.value.kind === 'word' ? keyAttr.value.value : ''
+        if (!v || !v.split('.').every((s) => IDENT.test(s))) err(`expected key=field, e.g. key=id (a field of each item)`, keyAttr)
+        key = v.split('.')
+      }
+      node = { type: 'each', source: ref(src as RefToken), as: (name as { value: string }).value, key, children: [], ...at }
       children = node.children
     } else if (keyword === 'if') {
       const negate = rest[0]?.kind === 'word' && rest[0].value === 'not'
       const [cond, extra] = negate ? rest.slice(1) : rest
-      if (cond?.kind !== 'ref' || extra) err(`expected: if @condition  (or: if not @condition)`, at)
-      node = { type: 'if', cond: ref(cond as RefValue & Token), negate, then: [], ...at }
+      if (cond?.kind !== 'ref' || cond.args || extra) err(`expected: if @condition  (or: if not @condition)`, at)
+      node = { type: 'if', cond: ref(cond as RefToken), negate, then: [], ...at }
       children = node.then
     } else {
       if (!NAME.test(keyword)) err(`invalid component name '${keyword}'`, head)
@@ -86,8 +101,10 @@ export function parse(src: string, file?: string): Ast {
   return ast
 }
 
-function ref(t: RefValue & Token): RefValue {
-  return { kind: 'ref', path: t.path, line: t.line, col: t.col }
+function ref(t: RefToken): RefValue {
+  const r: RefValue = { kind: 'ref', path: t.path, line: t.line, col: t.col }
+  if (t.args) r.args = t.args.map(value)
+  return r
 }
 
 function value(t: Exclude<Token, { kind: 'attr' }>): Value {

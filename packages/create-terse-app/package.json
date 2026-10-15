@@ -1,6 +1,6 @@
 {
   "name": "create-terse-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Create a Vite + React + shadcn/ui app with Terse, the UI language for coding agents.",
   "license": "MIT",
   "author": "AVYUKT TECH LABS",

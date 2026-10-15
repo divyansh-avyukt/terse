@@ -43,6 +43,7 @@ The component name comes from the file name: `sales-dashboard.terse` becomes `Sa
 |---|---|
 | `props a, b, onSave` | The props this component receives. Commas are optional. Every `@ref` must start with one of these names or with a loop variable. |
 | `use Name from "path"` | Imports a TSX component (its **default export**) so you can use `Name` as a node. The name must start with a capital letter. |
+| `use { A, B } from "path"` | Named imports, e.g. shadcn parts: `use { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar"`. |
 
 ## Values
 
@@ -67,6 +68,9 @@ has spaces: `headers="Name,Last seen"`. A `from..to` item is a range: `Thu..Wed`
 each @orders as order          # repeat children for every item; `order` is in scope inside
   text @order.customer
 
+each @tasks as task key=id     # key=field: a stable React key; use it when items move or hold state
+  text @task.title
+
 if @loading                    # truthy check; `if not @x` negates
   text "Loading…"
 else                           # optional, at the same indentation as its `if`
@@ -78,11 +82,22 @@ else                           # optional, at the same indentation as its `if`
 
 ## Events
 
-Handler props such as `on=` only take a reference to a function prop: `button "Save" on=@onSave`.
+Handler props such as `on=` take a reference to a function prop: `button "Save" on=@onSave`.
 - `button`: `on` becomes `onClick` and receives the click event.
 - `input`: `on` receives the **new string value**, not the event.
 
-There is no inline JavaScript. If you need `onSelect(plan.id)`, write that wrapper in the TSX parent.
+A handler can take **arguments**: `on=@move(@task.id, 1)`. Arguments are `@references` or literals
+(`"text"`, numbers, `true`/`false`, bare words); there are no expressions or nested calls. The handler
+gets your arguments first, then whatever the component normally passes:
+
+```
+each @tasks as task key=id
+  button "→" on=@move(@task.id, 1)          # move(task.id, 1, event)
+  input "Title" on=@rename(@task.id)        # rename(task.id, value)
+```
+
+Arguments are only allowed on handler props. Anything more than picking a function and its arguments
+belongs in the TSX parent.
 
 ## Style tokens
 

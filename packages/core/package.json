@@ -1,6 +1,6 @@
 {
   "name": "@terseui/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Terse language core: lexer, parser, IR and validator. No React dependency.",
   "license": "MIT",
   "author": "AVYUKT TECH LABS",

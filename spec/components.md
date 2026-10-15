@@ -64,6 +64,7 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up; a triple 
 | gap, pad | token |
 | tone | `default transparent destructive` — transparent: no border, shadow or background; destructive: red border |
 | on | handler — makes the whole card clickable (and keyboard-focusable) |
+| href | text — makes the whole card a link (keyboard-focusable; `http(s)` opens in a new tab) |
 | span | `1 2 3` — grid columns it takes from `lg` up, inside a `grid` |
 
 ### band
@@ -87,6 +88,13 @@ none; see `docs/code-block.tsx`).
 | lang | literal — `terse`, `tsx`, `bash`, `json`, ... |
 | title | text — label above the block, e.g. a file name |
 
+### form
+`form` — a form: pressing Enter in a field, or a `button type=submit`, calls `on` (the page doesn't reload).
+| prop | type |
+|---|---|
+| on* | handler — called with the submit event, after any arguments: `form on=@add(@column.id)` |
+| gap | token (md) |
+
 ### separator
 `separator` — horizontal rule. No props, no children.
 
@@ -107,6 +115,19 @@ none; see `docs/code-block.tsx`).
 ### text
 `text <text*>` — paragraph. Props: `size` (sm; also `xl` = display figure, `text-2xl font-bold`), `tone` (*runtime*),
 `align` (text alignment). Literals support inline markup: `**strong**`, `*em*`, `` `code` ``, `[label](href)`.
+
+### togglegroup
+`togglegroup` — shadcn `ToggleGroup`, for filter chips and segmented controls. Children are `toggle` lines.
+| prop | type | notes |
+|---|---|---|
+| value | text | the selected value; with `multiple=true`, an array of selected values |
+| on | handler | called with the new value (or array) |
+| multiple | `true`/`false` | allow several at once (false) |
+| variant | `default outline` | |
+| size | token | |
+
+### toggle
+`toggle <label*>` — one option of a `togglegroup`. Props: `value` (literal; defaults to the label), `icon`, `disabled`.
 
 ### badge
 `badge <text*>` — shadcn `Badge`. `tone` (*runtime*): default → secondary, muted → outline, primary → default,
@@ -160,7 +181,8 @@ success/warning → tinted green/amber, destructive → destructive.
 Children (buttons) render as an action row under the description.
 
 ### image
-`image <src*>` — `img`. Props: `alt` (text, default `""`), `size` (md).
+`image <src*>` — `img`. Props: `alt` (text, default `""`), `size` (md; `fill` = the full width and height of its container),
+`ratio` (`square video portrait`: a fixed aspect ratio, e.g. `image @p.img size=fill ratio=square` for product cards).
 
 ### link
 `link <label*> <href*>` — anchor. Props: `tone` (primary).
@@ -240,12 +262,13 @@ No props.
 | prop | type | notes |
 |---|---|---|
 | label* | text | with `size=icon`, the accessible name only |
-| variant | `default outline secondary ghost destructive link` | |
+| variant | `default outline secondary ghost destructive link`, *runtime* | |
 | size | `sm md lg icon` | `icon`: square, icon only |
 | icon | literal | lucide icon name, before the label |
 | count | text | small red counter on the corner (hidden when falsy) |
 | on | handler | becomes `onClick` |
 | href | text | renders a link styled as a button; `http(s)` links open in a new tab |
+| pressed | bool | a toggle button: solid while pressed, else `variant` (outline by default); sets `aria-pressed` |
 | disabled | bool | |
 | type | `button submit` | |
 

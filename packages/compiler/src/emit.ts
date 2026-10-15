@@ -46,7 +46,7 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
   const lower = (nodes: IRNode[]): Located[] =>
     nodes.map((n): Located => {
       const loc = { line: n.line, col: n.col }
-      if (n.kind === 'each') return { each: expr(n.source), as: n.as, body: lower(n.children), loc }
+      if (n.kind === 'each') return { each: expr(n.source), as: n.as, key: n.key && expr({ kind: 'ref', path: [n.as, ...n.key], line: n.line, col: n.col }), body: lower(n.children), loc }
       if (n.kind === 'if') {
         const cond = expr(n.cond)
         return { cond: n.negate ? `!${cond}` : cond, then: lower(n.then), else: n.else && lower(n.else), loc }
@@ -72,9 +72,11 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
     if (c === CHILDREN || 'pick' in c) return
     if ('each' in c) {
       const i = eachDepth ? `i${eachDepth + 1}` : 'i'
-      const body = c.body.length === 1 && isJsx(c.body[0]) ? withKey(c.body[0], i) : { tag: 'Fragment', props: { key: `{${i}}` }, children: c.body }
+      const key = c.key ?? i // a stable field when given (`each … key=id`), else the index
+      const body = c.body.length === 1 && isJsx(c.body[0]) ? withKey(c.body[0], key) : { tag: 'Fragment', props: { key: `{${key}}` }, children: c.body }
       if (body.tag === 'Fragment') fragmentNeeded = true
-      out(`{${c.each}?.map((${c.as}: any, ${i}: number) => (`)
+      // With a key field the index is unused, so leave it out (strict projects reject unused params).
+      out(`{${c.each}?.map((${c.as}: any${c.key ? '' : `, ${i}: number`}) => (`)
       print(body, depth + 1, loc, eachDepth + 1)
       return out('))}')
     }
@@ -116,7 +118,10 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
     const kept = [...names].filter(used).sort()
     if (kept.length) header.push(`import { ${kept.join(', ')} } from ${JSON.stringify(from)}`)
   }
-  for (const u of ir.uses) header.push(`import ${u.name} from ${JSON.stringify(u.from)}`)
+  for (const u of ir.uses) if (!u.named) header.push(`import ${u.name} from ${JSON.stringify(u.from)}`)
+  const named = new Map<string, string[]>()
+  for (const u of ir.uses) if (u.named) named.set(u.from, [...(named.get(u.from) ?? []), u.name])
+  for (const [from, names] of named) header.push(`import { ${names.join(', ')} } from ${JSON.stringify(from)}`)
   const propNames = ir.props.map((p) => p.name)
   // The file name must not shadow an import (input.terse vs shadcn's Input).
   const taken = new Set([...ir.uses.map((u) => u.name), ...[...imports.values()].flatMap((n) => [...n])])
@@ -150,7 +155,9 @@ const withKey = (j: Jsx, i: string): Jsx => ({ ...j, props: { key: `{${i}}`, ...
 function expr(v: Value): string {
   if (v.kind === 'lit') return JSON.stringify(v.value)
   const [root, ...rest] = v.path
-  return root + rest.map((p) => `?.${p}`).join('')
+  const ref = root + rest.map((p) => `?.${p}`).join('')
+  // @fn(@a, 1) → a callback: its arguments, then whatever the component passes (event, value, ...).
+  return v.args ? `((...a: any[]) => ${ref}?.(${[...v.args.map(expr), '...a'].join(', ')}))` : ref
 }
 
 /** JSX text, falling back to a string expression when it has characters JSX would interpret. */

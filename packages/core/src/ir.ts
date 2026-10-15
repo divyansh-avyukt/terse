@@ -14,6 +14,7 @@ export interface IREach extends Loc {
   kind: 'each'
   source: RefValue
   as: string
+  key?: string[]
   children: IRNode[]
 }
 
@@ -41,7 +42,7 @@ export function lower(ast: Ast): { ir: IR; diagnostics: Diagnostic[] } {
   const report = (message: string, at: Loc) => diagnostics.push({ message, line: at.line, col: at.col })
 
   const node = (n: Node): IRNode => {
-    if (n.type === 'each') return { kind: 'each', source: n.source, as: n.as, children: n.children.map(node), line: n.line, col: n.col }
+    if (n.type === 'each') return { kind: 'each', source: n.source, as: n.as, key: n.key, children: n.children.map(node), line: n.line, col: n.col }
     if (n.type === 'if') {
       return { kind: 'if', cond: n.cond, negate: n.negate, then: n.then.map(node), else: n.else?.map(node), line: n.line, col: n.col }
     }

@@ -110,14 +110,24 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
       case 'card': {
         const [Card, CardHeader, CardTitle, CardDescription, CardContent] = lib('card', 'Card', 'CardHeader', 'CardTitle', 'CardDescription', 'CardContent')
         const t = ctx.tokens(node, { gap: 'md' })
-        return h(Card, {
-          className: cls(ctx.style.classes('card', { tone: t.tone, span: t.span }), p.on ? 'cursor-pointer transition-colors hover:bg-accent/50' : ''),
-          ...(p.on && pressable(ctx.expr(p.on))),
+        const clickable = p.on || p.href
+        const card = h(Card, {
+          // With href the link is the grid item, so the span moves to it and the card fills it.
+          className: cls(ctx.style.classes('card', p.href ? { tone: t.tone } : { tone: t.tone, span: t.span }), clickable ? 'cursor-pointer transition-colors hover:bg-accent/50' : '', p.href ? 'h-full' : ''),
+          ...(p.on && !p.href ? pressable(ctx.expr(p.on)) : {}),
         },
           (p.title || p.description) && h(CardHeader, {},
             p.title && h(CardTitle, {}, ctx.child(p.title)),
             p.description && h(CardDescription, {}, ctx.child(p.description))),
           node.children.length > 0 && h(CardContent, { className: cls('flex flex-col', ctx.style.classes('card', { gap: t.gap, pad: t.pad })) }, CHILDREN))
+        if (!p.href) return card
+        // href: the whole card is a link (the span goes on the link, since it's the grid item).
+        return h('a', {
+          href: ctx.attr(p.href),
+          className: cls('block rounded-xl outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50', ctx.style.classes('card', { span: t.span })),
+          onClick: p.on && ctx.attr(p.on),
+          ...(p.href.kind === 'lit' ? external(String(p.href.value)) : {}),
+        }, card)
       }
       case 'heading': {
         const level = str('level') ?? '2'
@@ -138,11 +148,20 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
             p.icon && icon(str('icon')!, 'sm'), !iconOnly && ctx.child(p.label))
         }
         const [Button] = lib('button', 'Button')
+        const VARIANTS = '"default" | "outline" | "secondary" | "ghost" | "destructive" | "link"'
+        // pressed=@on: a toggle. Solid while pressed, else the given variant (outline by default).
+        // variant=@v: chosen at runtime; the validator has already limited literals to the valid set.
+        let variantAttr = variant && variant !== 'default' ? `"${variant}"` : undefined
+        if (p.pressed) {
+          const off = variant && variant !== 'default' ? variant : 'outline'
+          variantAttr = p.pressed.kind === 'lit' ? (p.pressed.value ? undefined : `"${off}"`) : `{${ctx.expr(p.pressed)} ? "default" : "${off}"}`
+        } else if (p.variant?.kind === 'ref') variantAttr = `{${ctx.expr(p.variant)} as ${VARIANTS}}`
         return h(Button, {
           // w-fit: don't stretch inside flex columns. Not on icon buttons: it would override their square size-9.
           className: cls(iconOnly ? '' : 'w-fit', p.count ? 'relative' : ''),
           type: ctx.attr(p.type),
-          variant: variant && variant !== 'default' ? `"${variant}"` : undefined,
+          variant: variantAttr,
+          'aria-pressed': p.pressed && (p.pressed.kind === 'lit' ? `{${Boolean(p.pressed.value)}}` : `{!!${ctx.expr(p.pressed)}}`),
           size: { sm: '"sm"', lg: '"lg"', icon: '"icon"' }[str('size') ?? ''],
           disabled: ctx.attr(p.disabled),
           onClick: ctx.attr(p.on),
@@ -233,6 +252,23 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const [TabsContent] = lib('tabs', 'TabsContent')
         return h(TabsContent, { value: p.value ? ctx.attr(p.value) : ctx.attr(p.label), className: '"flex flex-col gap-4 pt-2"' }, CHILDREN)
       }
+      case 'togglegroup': {
+        const [ToggleGroup, ToggleGroupItem] = lib('toggle-group', 'ToggleGroup', 'ToggleGroupItem')
+        const multiple = str('multiple') === 'true'
+        return h(ToggleGroup, {
+          type: multiple ? '"multiple"' : '"single"',
+          // Controlled with a value; otherwise uncontrolled, still reporting changes.
+          [p.value ? 'value' : 'defaultValue']: ctx.attr(p.value),
+          onValueChange: ctx.attr(p.on),
+          variant: str('variant') === 'outline' ? '"outline"' : undefined,
+          size: { sm: '"sm"', lg: '"lg"' }[str('size') ?? ''],
+        }, ...components(node.children).map((t) => h(ToggleGroupItem, {
+          value: t.props.value ? ctx.attr(t.props.value) : ctx.attr(t.props.label),
+          disabled: ctx.attr(t.props.disabled),
+        }, t.props.icon && icon(String(ctx.lit(t.props.icon)), 'sm'), ctx.child(t.props.label))))
+      }
+      case 'toggle':
+        return h('') // rendered by its togglegroup
       case 'badge': {
         const [Badge] = lib('badge', 'Badge')
         const variant = { default: 'secondary', muted: 'outline', primary: 'default', success: 'secondary', warning: 'secondary', destructive: 'destructive' }
@@ -329,8 +365,15 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const [TableCell] = lib('table', 'TableCell')
         return h(TableCell, { className: cls(style()) }, ctx.child(p.text), CHILDREN)
       }
-      case 'image':
-        return h('img', { src: ctx.attr(p.src), alt: ctx.attr(p.alt) ?? '""', className: cls('rounded-md object-cover', style({ size: 'md' })) })
+      case 'image': {
+        const ratio = { square: 'aspect-square', video: 'aspect-video', portrait: 'aspect-[3/4]' }[str('ratio') ?? '']
+        return h('img', { src: ctx.attr(p.src), alt: ctx.attr(p.alt) ?? '""', className: cls('rounded-md object-cover', ctx.style.classes('image', { size: str('size') ?? 'md' }), ratio ?? '') })
+      }
+      case 'form':
+        return h('form', {
+          className: cls('flex flex-col', style({ gap: 'md' })),
+          onSubmit: `{(e) => { e.preventDefault(); ${ctx.expr(p.on)}?.(e) }}`,
+        }, CHILDREN)
       case 'link':
         return h('a', { href: ctx.attr(p.href), className: cls('font-medium underline-offset-4 hover:underline', style({ tone: 'primary' })) }, ctx.child(p.label))
       case 'band':

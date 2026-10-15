@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.0
+
+Driven by feedback from a developer building an e-commerce app and a kanban board in Terse.
+
+**Language**
+- **Handler arguments:** `on=@move(@task.id, 1)`. Arguments are `@references` or literals, with no
+  expressions. The handler gets your arguments first, then what the component passes: the event for
+  `button`, the value for `input`, the submit event for `form`. This removes the per-item callbacks
+  containers used to build.
+- **Stable keys:** `each @tasks as task key=id` keys items by a field instead of their position, so
+  items that move or hold local state keep the right element.
+- **Named imports:** `use { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar"`.
+
+**Components and props**
+- `togglegroup` / `toggle`, for filter chips and segmented controls (single or `multiple=true`)
+- `form on=@submit`: Enter submits, and the page doesn't reload
+- `button pressed=@active`: a toggle button in one line (solid when pressed, sets `aria-pressed`);
+  `variant` can also be a `@ref`
+- `card href=`: the whole card is a link (it carries the grid `span`)
+- `image size=fill` and `ratio=square|video|portrait`
+
+**create-terse-app**
+- The template adds shadcn `toggle` and `toggle-group` (23 components).
+
 ## 0.2.0
 
 The vocabulary grows from 24 to 48 components, from the payments-dashboard stress test.

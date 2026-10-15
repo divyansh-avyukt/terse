@@ -1,6 +1,6 @@
 {
   "name": "@terseui/compiler",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Compiles Terse IR to React TSX through ComponentAdapter and StyleAdapter interfaces.",
   "license": "MIT",
   "author": "AVYUKT TECH LABS",

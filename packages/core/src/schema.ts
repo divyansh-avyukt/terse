@@ -56,7 +56,7 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   spacer: { args: [], props: {} },
   card: {
     args: ['title'],
-    props: { title: 'text', description: 'text', gap, pad, tone: ['default', 'transparent', 'destructive'], span, on: 'handler' },
+    props: { title: 'text', description: 'text', gap, pad, tone: ['default', 'transparent', 'destructive'], span, on: 'handler', href: 'text' },
     children: true,
   },
   heading: { args: ['text'], props: { text: 'text', level: ['1', '2', '3', '4'], size: [...size, 'xl'], tone, align }, required: ['text'] },
@@ -71,10 +71,12 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
       count: 'text',
       on: 'handler',
       href: 'text', // renders a link styled as a button
+      pressed: 'bool', // a toggle: solid when pressed, `variant` (outline by default) when not
       disabled: 'bool',
       type: ['button', 'submit'],
     },
     required: ['label'],
+    dynamic: ['variant'],
   },
   input: {
     args: ['label'],
@@ -86,6 +88,9 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   checkbox: { args: ['label'], props: { label: 'text', description: 'text', checked: 'bool', on: 'handler', disabled: 'bool' } },
   tabs: { args: [], props: { value: 'text', on: 'handler' }, children: 'tab' },
   tab: { args: ['label'], props: { label: 'text', value: 'literal', icon: 'literal' }, required: ['label'], children: true, parent: 'tabs' },
+  // Filter chips / segmented controls. multiple=true makes value an array of the selected values.
+  togglegroup: { args: [], props: { value: 'text', on: 'handler', multiple: ['true', 'false'], variant: ['default', 'outline'], size }, children: 'toggle' },
+  toggle: { args: ['label'], props: { label: 'text', value: 'literal', icon: 'literal', disabled: 'bool' }, required: ['label'], parent: 'togglegroup' },
   badge: { args: ['text'], props: { text: 'text', tone }, required: ['text'], dynamic: ['tone'] },
   avatar: { args: ['src'], props: { src: 'text', fallback: 'text', size }, required: ['fallback'] },
   progress: { args: ['value'], props: { value: 'text' }, required: ['value'] },
@@ -126,9 +131,11 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   th: { args: ['label'], props: { label: 'text', align, sort: 'text', on: 'handler' }, parent: 'thead' },
   tr: { args: [], props: { on: 'handler' }, children: 'td', parent: 'table' },
   td: { args: ['text'], props: { text: 'text', align }, children: true, parent: 'tr' },
-  image: { args: ['src'], props: { src: 'text', alt: 'text', size }, required: ['src'] },
+  image: { args: ['src'], props: { src: 'text', alt: 'text', size: [...size, 'fill'], ratio: ['square', 'video', 'portrait'] }, required: ['src'] },
   link: { args: ['label', 'href'], props: { label: 'text', href: 'text', tone }, required: ['label', 'href'] },
   separator: { args: [], props: {} },
+  // Submits on Enter and with a type=submit button; the default page reload is prevented.
+  form: { args: [], props: { on: 'handler', gap }, required: ['on'], children: true },
   // Full-bleed horizontal band (landing pages): background across the viewport, content centered at `size`.
   band: {
     args: [],

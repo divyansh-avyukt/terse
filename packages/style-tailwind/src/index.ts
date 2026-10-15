@@ -71,7 +71,7 @@ const SIZE: Record<string, Record<string, string>> = {
   heading: { sm: 'text-lg', md: 'text-2xl', lg: 'text-3xl md:text-4xl', xl: 'text-4xl sm:text-5xl md:text-7xl tracking-tighter' },
   col: { sm: 'w-full max-w-xl', md: 'w-full max-w-2xl', lg: 'w-full max-w-4xl' },
   band: { sm: 'max-w-3xl', md: 'max-w-5xl', lg: 'max-w-6xl' },
-  image: { sm: 'size-12', md: 'size-24', lg: 'size-48' },
+  image: { sm: 'size-12', md: 'size-24', lg: 'size-48', fill: 'w-full h-full' },
   page: { sm: 'max-w-3xl', md: 'max-w-5xl', lg: 'max-w-6xl' },
   chart: { sm: 'h-[200px]', md: 'h-[260px]', lg: 'h-[320px]' },
   text: { sm: 'text-sm', md: 'text-base', lg: 'text-lg', xl: 'text-2xl font-bold' },

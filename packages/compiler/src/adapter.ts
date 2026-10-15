@@ -31,6 +31,8 @@ export interface Jsx {
 export interface JsxEach {
   each: string
   as: string
+  /** React key expression; defaults to the index. */
+  key?: string
   body: JsxChild[]
 }
 

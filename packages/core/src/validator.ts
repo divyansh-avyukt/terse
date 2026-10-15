@@ -20,6 +20,7 @@ export function validate(ir: IR): Diagnostic[] {
   }
 
   const checkRef = (r: RefValue, scope: Set<string>) => {
+    for (const a of r.args ?? []) if (a.kind === 'ref') checkRef(a, scope)
     const root = r.path[0]
     if (scope.has(root)) return
     const hint = didYouMean(root, scope, '@')
@@ -55,7 +56,7 @@ export function validate(ir: IR): Diagnostic[] {
         if (!type) {
           const valid = Object.keys(spec.props)
           report(`unknown prop '${key}' on '${n.name}'${didYouMean(key, valid) || (valid.length ? ` — valid props: ${valid.join(', ')}` : ' — it takes no props')}`, { line: v.line, col: v.col - key.length - 1 }) // point at key=
-        } else if (!(v.kind === 'ref' && spec.dynamic?.includes(key))) checkValue(n.name, key, v, type, report)
+        } else if (!(v.kind === 'ref' && !v.args && spec.dynamic?.includes(key))) checkValue(n.name, key, v, type, report)
       }
       for (const r of spec?.required ?? []) if (!(r in n.props)) report(`'${n.name}' requires '${r}'`, n)
       if (!n.children.length) {
@@ -79,6 +80,9 @@ const allowed = (p: NonNullable<ComponentSpec['parent']>): readonly string[] => 
 
 function checkValue(comp: string, key: string, v: Value, type: (typeof COMPONENTS)[string]['props'][string], report: (m: string, at: Loc) => void) {
   const shown = v.kind === 'ref' ? `@${v.path.join('.')}` : JSON.stringify(v.value)
+  if (v.kind === 'ref' && v.args && type !== 'handler') {
+    return report(`'${key}' on '${comp}' isn't a handler, so it can't take arguments — only props like on= can, e.g. on=@select(@item.id)`, v)
+  }
   if (Array.isArray(type)) {
     if (v.kind === 'ref') report(`'${key}' on '${comp}' must be a literal (${type.join('|')}), not a reference`, v)
     else if (!type.includes(String(v.value))) {

@@ -236,6 +236,30 @@ export default function DialogView({ open, onOpen, onSave }: DialogViewProps) {
 "
 `;
 
+exports[`compiler snapshots > form 1`] = `
+"import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+
+export interface FormProps {
+  onAdd?: any
+  col?: any
+}
+
+export default function Form({ onAdd, col }: FormProps) {
+  return (
+    <form className="flex flex-col gap-2" onSubmit={(e) => { e.preventDefault(); ((...a: any[]) => onAdd?.(col?.id, ...a))?.(e) }}>
+      <div className="grid gap-2">
+        <Label htmlFor="title">Task</Label>
+        <Input id="title" name="title" />
+      </div>
+      <Button className="w-fit" type="submit">Add</Button>
+    </form>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > grid 1`] = `
 "
 export default function Grid() {
@@ -1006,6 +1030,48 @@ export default function Thead({ rows, sort, onSortAmount }: TheadProps) {
         ))}
       </TableBody>
     </Table>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > toggle 1`] = `
+"import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+
+export interface ToggleProps {
+  tags?: any
+  setTags?: any
+}
+
+export default function Toggle({ tags, setTags }: ToggleProps) {
+  return (
+    <ToggleGroup type="multiple" value={tags} onValueChange={setTags}>
+      <ToggleGroupItem value="Bug">Bug</ToggleGroupItem>
+      <ToggleGroupItem value="Docs" disabled={true}>Docs</ToggleGroupItem>
+    </ToggleGroup>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > togglegroup 1`] = `
+"import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { CircleIcon } from "lucide-react"
+
+export interface TogglegroupProps {
+  status?: any
+  setStatus?: any
+}
+
+export default function Togglegroup({ status, setStatus }: TogglegroupProps) {
+  return (
+    <ToggleGroup type="single" value={status} onValueChange={setStatus} variant="outline">
+      <ToggleGroupItem value="all">All</ToggleGroupItem>
+      <ToggleGroupItem value="open">
+        <CircleIcon size={16} />
+        Open
+      </ToggleGroupItem>
+    </ToggleGroup>
   )
 }
 "
