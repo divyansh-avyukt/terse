@@ -2,7 +2,7 @@ use StatRow from "@/views/cafe/components/StatRow.terse"
 use StatusBadge from "@/views/cafe/components/StatusBadge.terse"
 props kpis, range, onRange, revenue, methods, topItems, recent
 
-page gap=md
+page gap=md pad=md
   StatRow stats=@kpis
   grid cols=1,1,3
     card "Revenue" description=@revenue.caption span=2

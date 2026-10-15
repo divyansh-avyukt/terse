@@ -68,3 +68,43 @@ Type legend: `core` (language/schema/validator), `compiler` (emitter / adapter c
 - Toolchain bugs found by the snapshot/behaviour tests while adding features: an empty `className=""`
   from a lookup with no match, a stray `text-lg` on icons, and an operator-precedence bug where
   `"cls " + table[x] ?? ""` dropped classes (fixed by parenthesising every runtime lookup).
+
+## Phase 2: Transactions
+
+The vocabulary for this page was designed with Phase 1 (same commit), from the spec's list; these are
+the rows this page actually depends on, plus what only showed up once it rendered.
+
+| # | Needed | File | Added | Type / group |
+|---|---|---|---|---|
+| 24 | Sortable column headers with direction arrows and `aria-sort` | `TransactionsTable.terse` | `th sort= on=` (button + runtime arrow choice) | data display |
+| 25 | Clickable, keyboard-reachable rows that open a sheet | `TransactionsTable.terse` | `tr on=` (role=button, Enter/Space) | data display |
+| 26 | Side sheet with details, a timeline and actions | `TransactionSheet.terse` | `sheet` (controlled `open`/`on`) | overlay |
+| 27 | Loading skeleton | `Transactions.terse` | `skeleton lines= size=` | state |
+| 28 | Error state with a Retry action inside the alert | `Transactions.terse` | `callout tone=destructive` + children as an action row | state |
+| 29 | Hide the ID / Time / Method / avatar columns on phones | `TransactionsTable.terse` | `hide` now merges into the root element's `className` instead of wrapping (a `<div>` inside `<tr>` is invalid DOM); the wrapper is kept only for roots with no DOM node (fragments, Radix `Select`/`Dialog`/…) | core |
+| 30 | Date range, status and method filters with labels | `Transactions.terse` | `input type=date` (existing), `select` | input |
+
+### Pain points
+
+- **if/else ladders for page states.** loading → error → empty → data is four levels deep:
+  `if @loading / else / if @error / else / if @empty / else`. Proposed: `elif @error` (or a `switch @state`
+  block with `case loading` lines).
+- **No negation in props.** `disabled=` needs `noPrev`, `noNext`, `noFilters`, `cannotRefund` computed in
+  TSX because `disabled=@hasPrev` can't be flipped. Proposed: `disabled=!@hasPrev`, which is the same
+  truthiness rule `if not` already uses.
+- **Icon only before the label.** "Next ›" can't have a trailing chevron (`button icon=` always leads), so
+  the Next button has no icon and looks unbalanced next to "‹ Previous". Proposed: `iconEnd=`.
+- **Timeline markers can't vary by event.** Same root cause as Phase 1's icons: every event gets
+  `circle-dot` because `icon` must be a literal.
+- **No responsive spacing.** At 390px the default `page pad=lg` (24px) plus card padding pushed the status
+  badge out of the table. Every cafe page now uses `pad=md` at all widths. Proposed: a pair like
+  `pad=sm,lg` (below md / from md), matching `cols`.
+- **Repeated sort wiring.** Each sortable column repeats `sort=@sort.x on=@sortBy.x`. Proposed: `th "Amount"
+  sortable=amount` with one `sort=@sort` on `thead`, so the adapter derives both.
+
+### Compile errors hit
+
+- None. All four new views compiled first time. The TSX side needed one fix (a `TransactionsPage`
+  props rename when the store filter was added).
+- Not a Terse error, but found by screenshots: native date inputs showed black calendar icons in dark
+  mode until `.dark { color-scheme: dark }` was added to `index.css`.
