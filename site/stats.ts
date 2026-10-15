@@ -41,7 +41,7 @@ function benchmarks() {
     })
 }
 
-/** Where the tokens in the hand-written benchmark TSX go. */
+/** Where the tokens in the benchmark TSX go. */
 function anatomy() {
   let total = 0
   const parts = { imports: 0, types: 0, classNames: 0, closingTags: 0 }

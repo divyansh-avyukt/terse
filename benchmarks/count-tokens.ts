@@ -1,4 +1,4 @@
-// Token comparison: .terse vs equivalent hand-written TSX, plus the TSX Terse compiles to.
+// Token comparison: .terse vs the equivalent idiomatic TSX, plus the TSX Terse compiles to.
 // Run: pnpm bench   (tokenizer: o200k_base via js-tiktoken — an approximation of any LLM's tokenizer)
 import { shadcn } from '@terse/adapter-shadcn'
 import { compile } from '@terse/compiler'
@@ -30,7 +30,7 @@ console.table(
   Object.fromEntries(
     [...rows, total].map((r) => [
       r.name,
-      { '.terse': r.terse, 'hand TSX': r.tsx, saved: pct(r.terse, r.tsx), 'compiled TSX': r.compiled, 'ratio vs compiled': `${(r.compiled / r.terse).toFixed(1)}x` },
+      { '.terse': r.terse, TSX: r.tsx, saved: pct(r.terse, r.tsx), 'compiled TSX': r.compiled, 'ratio vs compiled': `${(r.compiled / r.terse).toFixed(1)}x` },
     ]),
   ),
 )

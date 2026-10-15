@@ -3,7 +3,7 @@ props step1, step2, step3
 band id=how
   col size=lg gap=sm
     text "How it works" tone=primary
-    heading "Write intent. Compile to the React you'd have written." size=lg
+    heading "Write intent. Compile to the React your agent would have written." size=lg
     text "Terse covers what a screen *shows*. State, effects and fetching stay in TSX, and data and handlers come in as props." size=lg tone=muted
   grid cols=1,2
     col

@@ -38,7 +38,7 @@ const TABS: { id: Stage; label: string; sub: string }[] = [
   { id: 'ui', label: 'Rendered', sub: 'same UI' },
 ]
 
-/** Hero: the hand-written TSX collapses into the Terse source, then into the rendered screen. */
+/** Hero: the TSX version collapses into the Terse source, then into the rendered screen. */
 export default function Collapse() {
   const [stage, setStage] = useState<Stage>('tsx')
   const [auto, setAuto] = useState(true)

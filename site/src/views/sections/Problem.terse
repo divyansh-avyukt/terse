@@ -3,7 +3,7 @@ use TokenAnatomy from "@/components/TokenAnatomy"
 band id=why tone=muted
   col size=lg gap=sm
     text "The problem" tone=primary
-    heading "TSX was designed for humans to type. Agents write most of it now." size=lg
+    heading "TSX was designed for people. Your agent is the one writing it." size=lg
     text "Every `className`, import and closing tag is a token your agent pays for, waits on and fills its context with — and one more place to drift from your design system." size=lg tone=muted
   TokenAnatomy
   grid cols=1,3

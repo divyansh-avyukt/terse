@@ -7,7 +7,7 @@ React TSX (shadcn/ui + Tailwind). See [spec/SPEC.md](spec/SPEC.md).
 pnpm install
 pnpm test            # parser, validator, compiler snapshots, spec drift
 pnpm dev             # playground at http://localhost:5173 (builds packages first)
-pnpm bench           # token comparison: .terse vs hand-written TSX
+pnpm bench           # token comparison: .terse vs the equivalent TSX
 ```
 
 | package | role |

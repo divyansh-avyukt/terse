@@ -12,13 +12,13 @@ const SEGMENTS = [
   { label: 'Everything else', value: a.rest, className: 'bg-foreground/[0.08]' },
 ]
 
-/** Where the tokens in hand-written TSX go, next to the same five screens in Terse. */
+/** Where the tokens in agent-written TSX go, next to the same five screens in Terse. */
 export default function TokenAnatomy() {
   return (
     <div className="flex w-full flex-col gap-5 rounded-2xl border bg-card p-5 sm:p-6">
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between font-mono text-xs text-muted-foreground">
-          <span>Hand-written TSX · 5 screens</span>
+          <span>TSX, as agents write it · 5 screens</span>
           <span className="tabular-nums">{fmt(a.total)} tokens</span>
         </div>
         <div className="flex h-9 w-full overflow-hidden rounded-lg" role="img" aria-label={SEGMENTS.map((s) => `${s.label} ${pct(s.value)}`).join(', ')}>

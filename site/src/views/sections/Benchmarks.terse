@@ -4,7 +4,7 @@ band id=benchmarks tone=muted
   col size=lg gap=sm
     text "Benchmarks" tone=primary
     heading "Same UI. **A quarter of the tokens.**" size=lg
-    text "Five common screens, each written twice: in Terse, and as idiomatic hand-written shadcn + Tailwind TSX. Tokens counted with `o200k_base`." size=lg tone=muted
+    text "Five common screens, each written twice: in Terse, and as the idiomatic shadcn + Tailwind TSX an agent writes today. Tokens counted with `o200k_base`." size=lg tone=muted
   grid cols=1,3
     stat "Fewer tokens, all five screens" @saved
     stat "Terse vs TSX, all five screens" @pair
@@ -16,4 +16,4 @@ band id=benchmarks tone=muted
         series "TSX" 927,630,441,379,753
     card "Results" description="Reproduce with: pnpm bench"
       table @rows cols=name,terse,tsx,saved headers="Screen,Terse,TSX,Saved"
-  text "The TSX that Terse compiles to is about the same size as the hand-written version, so the savings aren't bought with worse code. The hand-written TSX includes typed props, as an agent would write them." size=sm tone=muted
+  text "The TSX that Terse compiles to is about the same size as the TSX an agent writes directly, so the savings aren't bought with worse code. That TSX includes typed props, as agents write them." size=sm tone=muted

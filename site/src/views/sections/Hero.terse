@@ -5,7 +5,7 @@ band pad=lg align=center gap=lg
   badge "Open source · MIT · v0" tone=muted
   heading "Your agent writes the UI. Make it **write less**." level=1 size=xl align=center
   col size=md align=center
-    text "Terse is a tiny, presentation-only UI language for coding agents. A build-time compiler turns it into the React + shadcn/ui + Tailwind you'd have written by hand — with **~75% fewer tokens** and **zero runtime**." size=lg tone=muted align=center
+    text "Terse is a tiny, presentation-only UI language for coding agents. A build-time compiler turns it into the same React + shadcn/ui + Tailwind your agent writes today — with **~75% fewer tokens** and **zero runtime**." size=lg tone=muted align=center
   row gap=sm justify=center wrap=true
     button "Get started" href="#start" size=lg
     button @copyLabel variant=outline size=lg on=@onCopyPrompt
