@@ -5,6 +5,23 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
-  "dependencies": { "@terse/core": "workspace:*", "@terse/compiler": "workspace:*" }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./client.d.ts"
+    }
+  },
+  "dependencies": {
+    "@terse/compiler": "workspace:*",
+    "@terse/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  },
+  "peerDependencies": {
+    "vite": ">=8"
+  }
 }

@@ -63,6 +63,7 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
           const variant = str('variant')
           const size = { sm: '"sm"', lg: '"lg"' }[str('size') ?? '']
           return h(Button, {
+            className: '"w-fit"', // don't stretch inside flex columns
             type: ctx.attr(p.type),
             variant: variant && variant !== 'default' ? `"${variant}"` : undefined,
             size,

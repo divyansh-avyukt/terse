@@ -1,0 +1,24 @@
+# Presentation only: data and handlers come from DashboardContainer.tsx
+use UserAvatar from "@/components/UserAvatar"
+props user, stats, orders, loading, onRefresh
+
+page "Dashboard"
+  grid cols=3
+    stat "Revenue" @stats.revenue delta=@stats.revenueDelta
+    stat "Orders" @stats.orders delta=@stats.ordersDelta
+    stat "Customers" @stats.customers
+  grid cols=2
+    card "Recent orders" description="Latest activity across all stores"
+      if @loading
+        text "Loading…" tone=muted
+      else
+        table @orders cols=id,customer,status,total
+    card "Top products"
+      each @stats.topProducts as product
+        row justify=between
+          text @product.name
+          badge @product.sales
+  separator
+  row justify=between
+    UserAvatar user=@user size=sm
+    button "Refresh" variant=outline on=@onRefresh disabled=@loading

@@ -21,7 +21,7 @@ export interface ButtonViewProps {
 
 export default function ButtonView({ onSave, saving }: ButtonViewProps) {
   return (
-    <Button type="submit" variant="outline" size="sm" disabled={saving} onClick={onSave}>
+    <Button className="w-fit" type="submit" variant="outline" size="sm" disabled={saving} onClick={onSave}>
       Save
     </Button>
   )
@@ -208,7 +208,7 @@ export default function Dashboard({ user, orders, loading, onRefresh }: Dashboar
       ) : null}
       <div className="flex flex-row gap-4 items-center justify-between">
         <UserAvatar user={user} size="sm" />
-        <Button variant="outline" onClick={onRefresh}>Refresh</Button>
+        <Button className="w-fit" variant="outline" onClick={onRefresh}>Refresh</Button>
       </div>
     </main>
   )

@@ -1,0 +1,7 @@
+props user, onEdit
+
+card @user.name description=@user.email
+  row gap=sm
+    badge @user.role tone=primary
+    badge @user.plan
+  button "Edit profile" variant=outline size=sm on=@onEdit
