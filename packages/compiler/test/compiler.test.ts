@@ -213,6 +213,17 @@ describe('0.3: image fill, card href', () => {
   })
 })
 
+describe('0.4: unique field ids inside each', () => {
+  it('suffixes ids with every enclosing loop key, so labels stay tied to their own row', () => {
+    const code = tsx('props rows\neach @rows as r key=id\n  each @r.items as it\n    input "Qty"')
+    expect(code).toContain('<Label htmlFor={`qty-${r?.id}-${i2}`}>Qty</Label>')
+    expect(code).toContain('<Input id={`qty-${r?.id}-${i2}`} />')
+  })
+  it('keeps plain ids outside loops', () => {
+    expect(tsx('input "Email"')).toContain('<Input id="email" />')
+  })
+})
+
 describe('source maps', () => {
   it('maps JSX lines back to .terse lines', () => {
     const src = `props a\n\ncol\n  text "x"\n  text @a`

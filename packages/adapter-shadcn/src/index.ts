@@ -65,13 +65,17 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
       if (!p.label && !p.error) return control
       const [Label] = lib('label', 'Label')
       return h('div', { className: '"grid gap-2"' },
-        p.label && h(Label, { htmlFor: id ? `"${id}"` : undefined }, ctx.child(p.label)),
+        p.label && h(Label, { htmlFor: id }, ctx.child(p.label)),
         control,
         p.error && { cond: ctx.expr(p.error), then: [h('p', { className: '"text-destructive text-sm"' }, ctx.child(p.error))] })
     }
+    /** The control's id as a JSX attribute value. Inside `each` it carries the item's key, so every row's
+     *  label points at its own field instead of all rows sharing one id. */
     const fieldId = () => {
       const id = str('name') ?? slug(str('label') ?? str('placeholder') ?? '')
-      return id || undefined
+      if (!id) return undefined
+      const keys = ctx.loopKeys()
+      return keys.length ? `{\`${[id, ...keys.map((k) => `\${${k}}`)].join('-')}\`}` : `"${id}"`
     }
     // Controlled only when there is a handler to report changes to.
     const valueProp = (key: string) => (p.on ? key : `default${key[0].toUpperCase()}${key.slice(1)}`)
@@ -178,7 +182,7 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const [Input] = lib('input', 'Input')
         const id = fieldId()
         const control = h(Input, {
-          id: id && `"${id}"`,
+          id,
           name: ctx.attr(p.name),
           type: ctx.attr(p.type),
           placeholder: ctx.attr(p.placeholder),
@@ -196,7 +200,7 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const [Textarea] = lib('textarea', 'Textarea')
         const id = fieldId()
         return field(h(Textarea, {
-          id: id && `"${id}"`,
+          id,
           name: ctx.attr(p.name),
           placeholder: ctx.attr(p.placeholder),
           rows: p.rows && `{${ctx.expr(p.rows)}}`,
@@ -220,7 +224,7 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
           onValueChange: ctx.attr(p.on),
           disabled: ctx.attr(p.disabled),
         },
-          h(SelectTrigger, { id: id && `"${id}"`, className: '"w-full"', 'aria-invalid': p.error && `{!!${ctx.expr(p.error)}}` }, h(SelectValue, { placeholder: ctx.attr(p.placeholder) })),
+          h(SelectTrigger, { id, className: '"w-full"', 'aria-invalid': p.error && `{!!${ctx.expr(p.error)}}` }, h(SelectValue, { placeholder: ctx.attr(p.placeholder) })),
           h(SelectContent, {}, ...items)), id)
       }
       case 'switch':

@@ -1,6 +1,6 @@
 {
   "name": "@terseui/style-tailwind",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Terse style adapter that maps design tokens to Tailwind classes.",
   "license": "MIT",
   "author": "AVYUKT TECH LABS",

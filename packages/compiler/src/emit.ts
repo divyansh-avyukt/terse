@@ -33,6 +33,7 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
       }
       return `{((${JSON.stringify(table)} as Record<string, string>)[${expr(v)}] ?? ${JSON.stringify(fallback)})}`
     },
+    loopKeys: () => [...loops],
     tokens: (node, defaults = {}) => {
       const out: Partial<Record<StyleToken, string>> = { ...defaults }
       for (const key of Object.keys(TOKENS) as StyleToken[]) {
@@ -43,10 +44,18 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
     },
   }
 
+  // Enclosing loop keys, outermost first, mirroring the index names print() gives nested maps (i, i2, ...).
+  const loops: string[] = []
   const lower = (nodes: IRNode[]): Located[] =>
     nodes.map((n): Located => {
       const loc = { line: n.line, col: n.col }
-      if (n.kind === 'each') return { each: expr(n.source), as: n.as, key: n.key && expr({ kind: 'ref', path: [n.as, ...n.key], line: n.line, col: n.col }), body: lower(n.children), loc }
+      if (n.kind === 'each') {
+        const key = n.key && expr({ kind: 'ref', path: [n.as, ...n.key], line: n.line, col: n.col })
+        loops.push(key ?? (loops.length ? `i${loops.length + 1}` : 'i'))
+        const body = lower(n.children)
+        loops.pop()
+        return { each: expr(n.source), as: n.as, key, body, loc }
+      }
       if (n.kind === 'if') {
         const cond = expr(n.cond)
         return { cond: n.negate ? `!${cond}` : cond, then: lower(n.then), else: n.else && lower(n.else), loc }

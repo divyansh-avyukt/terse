@@ -27,6 +27,8 @@ Those are the only components and props that exist. Don't invent any.
 
 ## Verify every change
 
-1. `npm run build` passes (type-check plus compile). Terse errors give `file:line:col` and usually
+1. `npm run build` passes (compile plus type-check). The Terse plugin writes a `X.d.terse.ts` next to
+   each view with its props inferred from usage, so a container passing a misspelled or wrong-shaped
+   prop fails type-checking. Terse errors give `file:line:col` and usually
    "did you mean …". Fix the `.terse` source; don't work around the compiler.
 2. Check the result in the running app (`npm run dev`).

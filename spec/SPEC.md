@@ -185,6 +185,26 @@ src/
 - `.terse` files import other views by their full alias path:
   `use ProfileCard from "@/views/components/ProfileCard.terse"`.
 
+## Typed props
+
+The Vite plugin writes a `X.d.terse.ts` next to every view, with the props interface inferred from
+how the view uses them:
+
+| In the view | In the generated type |
+|---|---|
+| `text @task.title` | `task?: { title?: ReactNode }` |
+| `each @tasks as task` | `tasks?: Array<{ ... }>` |
+| `on=@onSave`, `on=@move(@id, 1)` | `onSave?: (...args: any[]) => void` |
+| `disabled=@busy`, `pressed=@on` | `busy?: boolean` |
+| `tone=@t` | `t?: "default" \| "muted" \| … \| (string & {})` |
+| `table @rows cols=id,total` | `rows?: Array<{ id?: ReactNode; total?: ReactNode }>` |
+| `slot @content` | `content?: ReactNode` |
+| only passed to your own component, or unused | `unknown` |
+
+Every prop is optional, so loading states are fine. A misspelled prop or a wrong shape (an object
+where a list is expected) is a type error in the TSX container. This needs `"allowArbitraryExtensions":
+true` in tsconfig (create-terse-app sets it). Generated files are gitignored and rewritten on every build.
+
 ## Toolchain
 
 - `@terseui/vite-plugin` compiles `*.terse` files during the build, with HMR, source maps that point

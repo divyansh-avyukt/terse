@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0
+
+**Typed props.** The Vite plugin writes a `X.d.terse.ts` next to each view, with the props interface
+inferred from how the view uses them: paths become object fields, `each` makes arrays, handlers make
+functions, token refs make unions. A container that misspells a prop or passes the wrong shape now
+fails type-checking; previously every view was `ComponentType<any>`.
+- Fields of `each` items are required keys (values may still be null or undefined), so an item built
+  with `isfirst` instead of `isFirst` is an error. Other nested objects (error maps, drafts, lookups)
+  stay partial, and top-level props stay optional for loading states.
+- Needs `"allowArbitraryExtensions": true` in tsconfig (create-terse-app sets it). Turn it off with
+  `terse({ ..., types: false })`.
+- `compile()` now also returns `dts`; `declarations(ir)` is exported.
+
+**Fixes**
+- Fields inside `each` (`input`, `textarea`, `select`) got the same `id` in every row, so labels pointed
+  at the first row's control. Ids now include every enclosing loop's key, e.g. `qty-${task.id}`.
+
+**create-terse-app**
+- `build` runs `vite build && tsc -b`, so the type-check always sees fresh declarations; generated
+  `*.d.terse.ts` files are gitignored.
+
 ## 0.3.0
 
 Driven by feedback from a developer building an e-commerce app and a kanban board in Terse.

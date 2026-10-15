@@ -32,6 +32,7 @@ pnpm add -D @types/node
 
 ```json
 "types": ["vite/client", "@terseui/vite-plugin/client"],
+"allowArbitraryExtensions": true,   // typed props: lets TS read the generated X.d.terse.ts
 "paths": { "@/*": ["./src/*"] },
 ```
 

@@ -63,6 +63,9 @@ export interface RenderContext {
   lookup(v: Value | undefined, table: Record<string, string>, fallback?: string): string | undefined
   /** The node's style-token props (gap, tone, ...) as strings, over the given defaults. */
   tokens(node: IRComponent, defaults?: Partial<Record<StyleToken, string>>): Partial<Record<StyleToken, string>>
+  /** Inside `each`: one expression per enclosing loop, outermost first, that is unique to the current item (its
+   *  `key=` field, else the index). Together they keep element ids unique per row. Empty outside loops. */
+  loopKeys(): string[]
 }
 
 /** Maps built-in IR components to a UI library's components. */
