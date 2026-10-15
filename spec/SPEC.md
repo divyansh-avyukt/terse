@@ -53,6 +53,10 @@ The component name comes from the file name: `sales-dashboard.terse` becomes `Sa
 | number / boolean | `12`, `true`, `false` | A literal. |
 | reference | `@stats.revenue`, `@onSave` | A prop or loop variable, with an optional `.path`. Missing values are safe: `@a.b` compiles to `a?.b`. |
 
+Text literals in `text` and `heading` support inline markup: `**strong**`, `*em*`, `` `code` ``
+and `[label](https://…)`, with no nesting. A `**strong**` span inside a heading renders in the accent
+colour. References render as plain text.
+
 Lists (such as `cols=id,customer,total`) are comma-separated with no spaces, or quoted if an item
 has spaces: `headers="Name,Last seen"`. A `from..to` item is a range: `Thu..Wed` is
 `Thu,Fri,Sat,Sun,Mon,Tue,Wed` (weekdays wrap around), `1..5` is `1,2,3,4,5`.

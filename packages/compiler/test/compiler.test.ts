@@ -25,6 +25,8 @@ const SNIPPETS: Record<string, string> = {
   image: `image "/logo.png" alt="Logo" size=sm`,
   link: `link "Docs" "https://example.com" tone=muted`,
   separator: `separator`,
+  band: `band id=start tone=inverse pad=xl size=md align=center\n  heading "Ship **less** code" size=xl align=center`,
+  code: `props snippet\ncol\n  code "page \\"Hi\\"" lang=terse title="hello.terse"\n  code @snippet lang=tsx`,
   icon: `icon cloud-rain size=lg`,
   callout: `callout "Heads up" "Fog expected" icon=info`,
   list: `list
@@ -86,6 +88,26 @@ page "Dashboard"
   it('escapes text that JSX would interpret', () => {
     const code = tsx(`text "a {b} <c> & d"\n`)
     expect(code).toContain(`<p className="text-sm">{"a {b} <c> & d"}</p>`)
+  })
+})
+
+describe('inline markup and links', () => {
+  it('renders **strong**, *em*, `code` and [links](url) inside text, keeping spaces', () => {
+    const code = tsx('text "Run `pnpm dev`, then **edit** a *view* — [docs](https://terse-ui.dev)."')
+    expect(code).toContain('{"Run "}')
+    expect(code).toContain('<code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.9em]">pnpm dev</code>')
+    expect(code).toContain('<strong className="font-semibold text-foreground">edit</strong>')
+    expect(code).toContain('<a href="https://terse-ui.dev" className="font-medium text-primary underline underline-offset-4" target="_blank" rel="noreferrer">')
+  })
+
+  it('accents emphasis in headings', () => {
+    expect(tsx('heading "Make it **write less**."')).toContain('<strong className="text-primary">write less</strong>')
+  })
+
+  it('button href renders a link with button styles', () => {
+    const code = tsx('button "GitHub" href="https://github.com/x" variant=outline size=lg')
+    expect(code).toContain('import { buttonVariants } from "@/components/ui/button"')
+    expect(code).toContain('<a href="https://github.com/x" className={buttonVariants({ variant: "outline", size: "lg" }) + " w-fit"} target="_blank" rel="noreferrer">')
   })
 })
 

@@ -38,11 +38,11 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   page: { args: ['title'], props: { title: 'text', gap, pad, size }, children: true },
   section: { args: ['title'], props: { title: 'text', gap, pad }, children: true },
   row: { args: [], props: { gap, pad, align, justify, wrap }, children: true },
-  col: { args: [], props: { gap, pad, align, justify }, children: true },
+  col: { args: [], props: { gap, pad, align, justify, size }, children: true }, // size: max width
   grid: { args: [], props: { cols, gap, pad }, children: true },
   card: { args: ['title'], props: { title: 'text', description: 'text', gap, pad, tone: ['default', 'transparent'] }, children: true },
-  heading: { args: ['text'], props: { text: 'text', level: ['1', '2', '3', '4'], size, tone }, required: ['text'] },
-  text: { args: ['text'], props: { text: 'text', size: [...size, 'xl'], tone }, required: ['text'] },
+  heading: { args: ['text'], props: { text: 'text', level: ['1', '2', '3', '4'], size: [...size, 'xl'], tone, align }, required: ['text'] },
+  text: { args: ['text'], props: { text: 'text', size: [...size, 'xl'], tone, align }, required: ['text'] },
   button: {
     args: ['label'],
     props: {
@@ -50,6 +50,7 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
       variant: ['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'],
       size,
       on: 'handler',
+      href: 'text', // renders a link styled as a button
       disabled: 'bool',
       type: ['button', 'submit'],
     },
@@ -97,6 +98,13 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   image: { args: ['src'], props: { src: 'text', alt: 'text', size }, required: ['src'] },
   link: { args: ['label', 'href'], props: { label: 'text', href: 'text', tone }, required: ['label', 'href'] },
   separator: { args: [], props: {} },
+  // Full-bleed horizontal band (landing pages): background across the viewport, content centered at `size`.
+  band: {
+    args: [],
+    props: { id: 'literal', tone: ['default', 'muted', 'inverse', 'primary'], pad, gap, size, align },
+    children: true,
+  },
+  code: { args: ['source'], props: { source: 'text', lang: 'literal', title: 'text' }, required: ['source'] },
 }
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

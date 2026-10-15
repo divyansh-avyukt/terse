@@ -45,6 +45,7 @@ export default function terse(config: TerseConfig): Plugin {
     async resolveId(source, importer, options) {
       const path = source.split('?')[0]
       if (!path.endsWith('.terse') && !path.endsWith('.terse' + SUFFIX)) return
+      if (path.endsWith('.terse') && source !== path) return // x.terse?raw etc.: leave to Vite
       const real = path.endsWith(SUFFIX) ? path.slice(0, -SUFFIX.length) : path
       const resolved = await this.resolve(real, importer, { ...options, skipSelf: true })
       return resolved && resolved.id + SUFFIX

@@ -1,5 +1,5 @@
 import { CHILDREN, type ComponentAdapter, type Jsx, type JsxChild } from '@terse/compiler'
-import { expandList, type IRComponent } from '@terse/core'
+import { expandList, parseInline, type IRComponent, type Value } from '@terse/core'
 
 const IDENT = /^[A-Za-z_$][\w$]*$/
 
@@ -15,6 +15,7 @@ const cls = (...parts: string[]) => {
 const humanize = (s: string) => s.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase())
 const pascal = (s: string) => s.replace(/(^|[-_\s]+)(\w)/g, (_, __, c: string) => c.toUpperCase())
 const ICON_PX: Record<string, number> = { sm: 16, md: 20, lg: 24 }
+const external = (href: string) => (/^https?:/.test(href) ? { target: '"_blank"', rel: '"noreferrer"' } : {})
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 export interface ShadcnOptions {
@@ -35,6 +36,19 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
       }
       // lucide's `<Name>Icon` aliases can't collide with shadcn names (Badge, Table, ...).
       const icon = (name: string, size?: string) => h(ctx.use(`${pascal(name)}Icon`, 'lucide-react'), { size: size && `{${ICON_PX[size]}}` })
+
+      /** Text content with inline markup (**strong**, *em*, `code`, [link](href)); a @ref renders as-is. */
+      const rich = (v: Value | undefined, strong = '"font-semibold text-foreground"'): JsxChild[] => {
+        if (v?.kind !== 'lit' || typeof v.value !== 'string') return [ctx.child(v)].filter((c) => c !== undefined)
+        return parseInline(v.value).map((seg): JsxChild => {
+          const text = ctx.child({ ...v, value: seg.text })!
+          if (seg.kind === 'strong') return h('strong', { className: strong }, text)
+          if (seg.kind === 'em') return h('em', {}, text)
+          if (seg.kind === 'code') return h('code', { className: '"rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.9em]"' }, text)
+          if (seg.kind === 'link') return h('a', { href: `"${seg.href}"`, className: '"font-medium text-primary underline underline-offset-4"', ...external(seg.href) }, text)
+          return text
+        })
+      }
 
       switch (node.name) {
         case 'page':
@@ -60,14 +74,22 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         }
         case 'heading': {
           const level = str('level') ?? '2'
-          return h(`h${level}`, { className: cls('font-semibold tracking-tight', style({ size: level === '1' ? 'lg' : level === '2' ? 'md' : 'sm' })) }, ctx.child(p.text))
+          // Emphasis in a heading is the accent colour.
+          return h(`h${level}`, { className: cls('font-semibold tracking-tight text-balance', style({ size: level === '1' ? 'lg' : level === '2' ? 'md' : 'sm' })) },
+            ...rich(p.text, '"text-primary"'))
         }
         case 'text':
-          return h('p', { className: cls(style({ size: 'sm' })) }, ctx.child(p.text))
+          return h('p', { className: cls(style({ size: 'sm' })) }, ...rich(p.text))
         case 'button': {
-          const [Button] = lib('button', 'Button')
           const variant = str('variant')
           const size = { sm: '"sm"', lg: '"lg"' }[str('size') ?? '']
+          if (p.href) {
+            const [buttonVariants] = lib('button', 'buttonVariants')
+            const opts = [variant && variant !== 'default' && `variant: "${variant}"`, size && `size: ${size}`].filter(Boolean).join(', ')
+            return h('a', { href: ctx.attr(p.href), className: `{${buttonVariants}({ ${opts} }) + " w-fit"}`, ...(p.href.kind === 'lit' ? external(String(p.href.value)) : {}) },
+              ctx.child(p.label))
+          }
+          const [Button] = lib('button', 'Button')
           return h(Button, {
             className: '"w-fit"', // don't stretch inside flex columns
             type: ctx.attr(p.type),
@@ -168,6 +190,14 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
           return h('img', { src: ctx.attr(p.src), alt: ctx.attr(p.alt) ?? '""', className: cls('rounded-md object-cover', style({ size: 'md' })) })
         case 'link':
           return h('a', { href: ctx.attr(p.href), className: cls('font-medium underline-offset-4 hover:underline', style({ tone: 'primary' })) }, ctx.child(p.label))
+        case 'band':
+          return h('section', { id: ctx.attr(p.id), className: cls('w-full scroll-mt-16', ctx.style.classes('band', { tone: str('tone') ?? 'default', pad: str('pad') ?? 'lg' })) },
+            h('div', { className: cls('mx-auto flex w-full flex-col px-6', ctx.style.classes('band', { size: str('size') ?? 'lg', gap: str('gap') ?? 'lg', align: str('align') ?? 'stretch' })) }, CHILDREN))
+        case 'code': {
+          // shadcn has no code block; the app provides components/ui/code-block (see docs/code-block.tsx).
+          const [CodeBlock] = lib('code-block', 'CodeBlock')
+          return h(CodeBlock, { code: p.source.kind === 'lit' ? `{${JSON.stringify(p.source.value)}}` : ctx.attr(p.source), lang: ctx.attr(p.lang), title: ctx.attr(p.title) })
+        }
         case 'separator': {
           const [Separator] = lib('separator', 'Separator')
           return h(Separator)

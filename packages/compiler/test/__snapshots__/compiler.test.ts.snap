@@ -11,6 +11,24 @@ export default function BadgeView() {
 "
 `;
 
+exports[`compiler snapshots > band 1`] = `
+"
+export default function Band() {
+  return (
+    <section id="start" className="w-full scroll-mt-16 dark bg-background text-foreground py-32">
+      <div className="mx-auto flex w-full flex-col px-6 max-w-5xl gap-6 items-center">
+        <h2 className="font-semibold tracking-tight text-balance text-4xl sm:text-5xl md:text-7xl tracking-tighter text-center">
+          {"Ship "}
+          <strong className="text-primary">less</strong>
+          {" code"}
+        </h2>
+      </div>
+    </section>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > button 1`] = `
 "import { Button } from "@/components/ui/button"
 
@@ -86,6 +104,24 @@ export default function Chart() {
 "
 `;
 
+exports[`compiler snapshots > code 1`] = `
+"import { CodeBlock } from "@/components/ui/code-block"
+
+export interface CodeProps {
+  snippet?: any
+}
+
+export default function Code({ snippet }: CodeProps) {
+  return (
+    <div className="flex flex-col gap-4">
+      <CodeBlock code={"page \\"Hi\\""} lang="terse" title="hello.terse" />
+      <CodeBlock code={snippet} lang="tsx" />
+    </div>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > col 1`] = `
 "
 export default function Col() {
@@ -114,7 +150,7 @@ exports[`compiler snapshots > heading 1`] = `
 "
 export default function Heading() {
   return (
-    <h1 className="font-semibold tracking-tight text-3xl">Settings</h1>
+    <h1 className="font-semibold tracking-tight text-balance text-3xl md:text-4xl">Settings</h1>
   )
 }
 "

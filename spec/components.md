@@ -35,7 +35,7 @@ Prop types: **text** (literal or `@ref`) · **ref** (`@ref` only) · **handler**
 | wrap | `true`/`false` | false |
 
 ### col
-`col` — vertical flex. Props: `gap` (md), `pad`, `align`, `justify`.
+`col` — vertical flex. Props: `gap` (md), `pad`, `align`, `justify`, `size` (max width: sm `max-w-xl`, md `max-w-2xl`, lg `max-w-4xl`; default none).
 
 ### grid
 `grid` — responsive grid. Props: `cols` (3), `gap` (md), `pad`. A single `cols=N` is 1 column on small
@@ -50,6 +50,27 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 | gap, pad | token |
 | tone | `default transparent` — transparent: no border, shadow or background |
 
+### band
+`band` — full-bleed horizontal band for landing pages: background spans the viewport, content is a
+centered column. Use bands as top-level nodes (instead of `page`).
+| prop | type | default |
+|---|---|---|
+| id | literal — anchor for `#links` | — |
+| tone | `default muted inverse primary` — inverse flips to the dark theme | default |
+| pad | token — vertical padding | lg |
+| gap | token | lg |
+| size | token — content max width (sm `max-w-3xl`, md `max-w-5xl`, lg `max-w-6xl`) | lg |
+| align | token — horizontal alignment of the content | stretch |
+
+### code
+`code <source*>` — a highlighted code block. Needs `components/ui/code-block` in the app (shadcn has
+none; see `docs/code-block.tsx`).
+| prop | type |
+|---|---|
+| source* | text — usually a `@ref` (e.g. a file imported with `?raw`) |
+| lang | literal — `terse`, `tsx`, `bash`, `json`, ... |
+| title | text — label above the block, e.g. a file name |
+
 ### separator
 `separator` — horizontal rule. No props, no children.
 
@@ -61,11 +82,15 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 |---|---|---|
 | text* | text | — |
 | level | `1`–`4` | 2 |
-| size | token | by level |
+| size | token, or `xl` (display headline) | by level |
 | tone | token | default |
+| align | token — text alignment | start |
+
+`text` supports inline markup in literals (see SPEC); in a heading, `**strong**` renders in the accent colour.
 
 ### text
-`text <text*>` — paragraph. Props: `size` (sm; also `xl` = display figure, `text-2xl font-bold`), `tone`.
+`text <text*>` — paragraph. Props: `size` (sm; also `xl` = display figure, `text-2xl font-bold`), `tone`,
+`align` (text alignment). Literals support inline markup: `**strong**`, `*em*`, `` `code` ``, `[label](href)`.
 
 ### badge
 `badge <text*>` — shadcn `Badge`. `tone`: default → secondary, muted → outline, primary → default, destructive → destructive.
@@ -151,6 +176,7 @@ No props.
 | variant | `default outline secondary ghost destructive link` | |
 | size | token | |
 | on | handler | becomes `onClick` |
+| href | text | renders a link styled as a button; `http(s)` links open in a new tab |
 | disabled | bool | |
 | type | `button submit` | |
 
