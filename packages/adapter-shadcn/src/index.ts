@@ -116,7 +116,8 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const variant = str('variant')
         const iconOnly = str('size') === 'icon'
         return h(Button, {
-          className: cls('w-fit', p.count ? 'relative' : ''), // w-fit: don't stretch inside flex columns
+          // w-fit: don't stretch inside flex columns. Not on icon buttons: it would override their square size-9.
+          className: cls(iconOnly ? '' : 'w-fit', p.count ? 'relative' : ''),
           type: ctx.attr(p.type),
           variant: variant && variant !== 'default' ? `"${variant}"` : undefined,
           size: { sm: '"sm"', lg: '"lg"', icon: '"icon"' }[str('size') ?? ''],

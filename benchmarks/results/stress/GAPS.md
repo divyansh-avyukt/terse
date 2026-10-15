@@ -195,3 +195,13 @@ Bugs found by looking at the page, not by tests:
 ### Compile errors hit
 
 - None in `.terse`.
+
+## Found while writing the report
+
+- **Icon buttons were 16px wide.** The adapter gives every `button` `w-fit` (so buttons don't stretch in
+  columns), which overrode `size=icon`'s square `size-9`. Every icon-only button in the app (theme toggle,
+  bell, menu, trash) was 16×36. Neither tests nor screenshots caught it; the pixel diff between
+  `Settings.terse` and its hand-written calibration twin did. Fixed in the adapter, with a regression test.
+- **Error-message probe.** I hit no `.terse` compile errors while building, so 16 plausible mistakes were fed
+  to the compiler on purpose. Results in README.md §5. Two pass silently: a typo in a ref *path*
+  (`@tx.amout`, only the root is checked) and `"{m.name}"` (rendered literally).

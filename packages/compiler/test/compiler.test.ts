@@ -135,6 +135,10 @@ page "Dashboard"
     expect(code).toMatch(/<DropdownMenuTrigger asChild={true}>\s*<Button/)
   })
 
+  it('icon buttons stay square (no w-fit over size-9)', () => {
+    expect(tsx(`button "Close" size=icon icon=x`)).toContain('<Button size="icon" aria-label="Close">')
+  })
+
   it('escapes text that JSX would interpret', () => {
     const code = tsx(`text "a {b} <c> & d"\n`)
     expect(code).toContain(`<p className="text-sm">{"a {b} <c> & d"}</p>`)
