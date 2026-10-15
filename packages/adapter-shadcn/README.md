@@ -6,6 +6,6 @@ Renders Terse components as [shadcn/ui](https://ui.shadcn.com) components. Your 
 shadcn({ ui: '@/components/ui' }) // import path of your shadcn components folder
 ```
 
-Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/AVYUKT-TECH-LABS/terse
+Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/divyansh-avyukt/terse
 
 MIT © AVYUKT TECH LABS

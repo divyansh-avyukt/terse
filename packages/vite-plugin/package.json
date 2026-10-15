@@ -7,10 +7,10 @@
   "homepage": "https://terse-ui.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AVYUKT-TECH-LABS/terse.git",
+    "url": "git+https://github.com/divyansh-avyukt/terse.git",
     "directory": "packages/vite-plugin"
   },
-  "bugs": "https://github.com/AVYUKT-TECH-LABS/terse/issues",
+  "bugs": "https://github.com/divyansh-avyukt/terse/issues",
   "keywords": [
     "terse",
     "ui",

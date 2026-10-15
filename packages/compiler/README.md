@@ -10,6 +10,6 @@ import { tailwind } from '@terseui/style-tailwind'
 const { code, map } = compile(source, { file: 'Dashboard.terse', components: shadcn(), style: tailwind() })
 ```
 
-Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/AVYUKT-TECH-LABS/terse
+Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/divyansh-avyukt/terse
 
 MIT © AVYUKT TECH LABS

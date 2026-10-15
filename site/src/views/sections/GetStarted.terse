@@ -16,5 +16,5 @@ band id=start
       text "**3 · Write a view**"
       code @first lang=terse title="views/Hello.terse"
   row gap=sm wrap=true
-    button "Read the guide" href="https://github.com/AVYUKT-TECH-LABS/terse/blob/main/docs/getting-started.md"
+    button "Read the guide" href="https://github.com/divyansh-avyukt/terse/blob/main/docs/getting-started.md"
     button "Star on GitHub" href=@github variant=outline

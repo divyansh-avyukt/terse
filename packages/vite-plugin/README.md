@@ -15,6 +15,6 @@ export default defineConfig({
 
 For `import X from "./x.terse"` to type-check, add `"@terseui/vite-plugin/client"` to `compilerOptions.types`.
 
-Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/AVYUKT-TECH-LABS/terse
+Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/divyansh-avyukt/terse
 
 MIT © AVYUKT TECH LABS

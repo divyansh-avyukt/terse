@@ -7,6 +7,6 @@ Maps Terse style tokens (`gap=md`, `tone=muted`, `size=lg`, ...) to Tailwind cla
 @source "../node_modules/@terseui/adapter-shadcn/src";
 ```
 
-Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/AVYUKT-TECH-LABS/terse
+Docs, spec and getting started: https://terse-ui.dev · Source: https://github.com/divyansh-avyukt/terse
 
 MIT © AVYUKT TECH LABS

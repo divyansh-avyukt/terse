@@ -5,4 +5,4 @@ band tone=inverse pad=xl size=md align=center gap=md
     text "Programming languages have always been designed for the people who type them. That made sense until the one typing became a model." size=lg tone=muted align=center
     text "Today an agent writes your login page, your dashboard and your settings screen, in a format designed for people. Most of each file is ceremony the model has to produce, you have to pay for, and someone has to review." size=lg tone=muted align=center
     text "Terse bets on a split. **Presentation** becomes a small, strict language that models write fluently and compilers can check. **Logic** stays in real code, where it belongs. Humans review intent, not class names." size=lg tone=muted align=center
-    text "It's v0, and the vocabulary is small on purpose. [Help shape it.](https://github.com/AVYUKT-TECH-LABS/terse)" size=lg align=center
+    text "It's v0, and the vocabulary is small on purpose. [Help shape it.](https://github.com/divyansh-avyukt/terse)" size=lg align=center

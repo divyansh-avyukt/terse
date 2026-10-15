@@ -20,7 +20,7 @@ What the app does:
 Terse is a presentation-only UI language that compiles .terse files to React TSX
 (shadcn/ui + Tailwind) via a Vite plugin.
 
-1. Follow https://github.com/AVYUKT-TECH-LABS/terse/blob/main/docs/getting-started.md
+1. Follow https://github.com/divyansh-avyukt/terse/blob/main/docs/getting-started.md
    step by step, scaffolding into this directory (`pnpm create vite@latest . ...`).
 2. Copy that repo's docs/CLAUDE.template.md to ./CLAUDE.md. It imports the spec from
    node_modules/@terseui/core; read SPEC.md and components.md there in full. Those are the
