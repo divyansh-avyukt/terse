@@ -1,0 +1,17 @@
+{
+  "name": "terse",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b packages/vite-plugin packages/adapter-shadcn packages/style-tailwind",
+    "test": "vitest run",
+    "bench": "pnpm build && node benchmarks/count-tokens.ts",
+    "dev": "pnpm --filter playground dev"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "js-tiktoken": "^1.0.21",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.4"
+  }
+}
