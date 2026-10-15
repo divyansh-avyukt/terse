@@ -1,0 +1,31 @@
+{
+  "name": "terse",
+  "displayName": "Terse",
+  "description": "Syntax highlighting and live diagnostics for .terse UI files",
+  "version": "0.0.1",
+  "publisher": "avyuktlabs",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Programming Languages", "Linters"],
+  "main": "./extension.js",
+  "activationEvents": ["onLanguage:terse"],
+  "scripts": {
+    "package": "node pack.mjs",
+    "install-ext": "node pack.mjs && code --install-extension terse.vsix --force"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "terse",
+        "aliases": ["Terse", "terse"],
+        "extensions": [".terse"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [{ "language": "terse", "scopeName": "source.terse", "path": "./syntaxes/terse.tmLanguage.json" }],
+    "configurationDefaults": {
+      "[terse]": { "editor.tabSize": 2, "editor.insertSpaces": true, "editor.detectIndentation": false }
+    }
+  }
+}
