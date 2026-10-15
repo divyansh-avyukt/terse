@@ -15,7 +15,7 @@ exports[`compiler snapshots > band 1`] = `
 "
 export default function Band() {
   return (
-    <section id="start" className="w-full scroll-mt-16 dark bg-background text-foreground py-32">
+    <section id="start" className="w-full scroll-mt-16 dark bg-card text-card-foreground py-32">
       <div className="mx-auto flex w-full flex-col px-6 max-w-5xl gap-6 items-center">
         <h2 className="font-semibold tracking-tight text-balance text-4xl sm:text-5xl md:text-7xl tracking-tighter text-center">
           {"Ship "}

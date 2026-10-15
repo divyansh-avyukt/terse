@@ -1,0 +1,14 @@
+props container, view
+
+band id=interop
+  col size=lg gap=sm
+    text "Interop" tone=primary
+    heading "Not a framework. **A file type.**" size=lg
+    text "Views are `.terse`; state, effects and fetching stay in TSX. Either one can import the other, so you can adopt Terse one screen at a time and leave it the same way." size=lg tone=muted
+  grid cols=1,2
+    code @container lang=tsx title="pages/DashboardPage.tsx"
+    code @view lang=terse title="views/pages/Dashboard.terse"
+  grid cols=1,3
+    card "TSX imports Terse" description="A .terse file is a typed default-export React component. Pass it data and handlers."
+    card "Terse uses TSX" description="use UserAvatar from \"@/components/UserAvatar\" brings any component into a view."
+    card "Nothing to eject" description="The compiled output is plain TSX. Commit it and delete the plugin whenever you like."

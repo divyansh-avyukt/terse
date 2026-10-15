@@ -1,0 +1,17 @@
+props snippet, error
+
+band id=guardrails tone=inverse
+  grid cols=1,2 gap=xl
+    col gap=md
+      text "Guardrails" tone=primary
+      heading "Your design system, **enforced by a grammar.**" size=lg
+      text "Spacing, tone and size are tokens, not free-form classes. The agent can't write `gap-[13px]` because the language has no way to say it, so consistency comes from the compiler, not from review." size=lg tone=muted
+      row gap=xs wrap=true
+        badge "gap=none…xl"
+        badge "pad=none…xl"
+        badge "tone=muted|primary|…"
+        badge "size=sm|md|lg"
+        badge "align · justify · cols"
+    col gap=sm
+      code @snippet lang=terse title="Card.terse"
+      code @error lang=text title="terse compiler · real output"

@@ -56,7 +56,7 @@ centered column. Use bands as top-level nodes (instead of `page`).
 | prop | type | default |
 |---|---|---|
 | id | literal — anchor for `#links` | — |
-| tone | `default muted inverse primary` — inverse flips to the dark theme | default |
+| tone | `default muted inverse primary` — inverse: the dark theme on the card surface | default |
 | pad | token — vertical padding | lg |
 | gap | token | lg |
 | size | token — content max width (sm `max-w-3xl`, md `max-w-5xl`, lg `max-w-6xl`) | lg |

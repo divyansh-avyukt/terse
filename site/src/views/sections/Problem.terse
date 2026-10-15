@@ -1,0 +1,12 @@
+use TokenAnatomy from "@/components/TokenAnatomy"
+
+band id=why tone=muted
+  col size=lg gap=sm
+    text "The problem" tone=primary
+    heading "TSX was designed for humans to type. Agents write most of it now." size=lg
+    text "Every `className`, import and closing tag is a token your agent pays for, waits on and fills its context with — and one more place to drift from your design system." size=lg tone=muted
+  TokenAnatomy
+  grid cols=1,3
+    card "You pay for ceremony" description="Most of a component's tokens describe how to type it, not what it shows. You pay for them on every generation and every edit."
+    card "Agents drift" description="Free-form classes invite gap-[13px], a fifth grey and a button that's almost the right size. Review catches some of it."
+    card "Diffs get long" description="A 160-line diff for a 30-line idea is hard to review, so it gets skimmed. Smaller source means you actually read it."

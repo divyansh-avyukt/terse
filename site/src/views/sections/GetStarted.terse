@@ -1,0 +1,20 @@
+props install, config, first, github
+
+band id=start
+  col size=lg gap=sm
+    text "Get started" tone=primary
+    heading "Three steps. Two minutes." size=lg
+    text "Add the plugin to a Vite + React app that uses shadcn/ui, then write your first view." size=lg tone=muted
+  col gap=sm
+    text "**1 · Install**"
+    code @install lang=bash
+  grid cols=1,2
+    col gap=sm
+      text "**2 · Add the plugin**"
+      code @config lang=ts title="vite.config.ts"
+    col gap=sm
+      text "**3 · Write a view**"
+      code @first lang=terse title="views/Hello.terse"
+  row gap=sm wrap=true
+    button "Read the guide" href="https://github.com/avyuktlabs/terse/blob/main/docs/getting-started.md"
+    button "Star on GitHub" href=@github variant=outline

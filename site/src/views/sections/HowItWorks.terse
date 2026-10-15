@@ -1,0 +1,21 @@
+props step1, step2, step3
+
+band id=how
+  col size=lg gap=sm
+    text "How it works" tone=primary
+    heading "Write intent. Compile to the React you'd have written." size=lg
+    text "Terse covers what a screen *shows*. State, effects and fetching stay in TSX, and data and handlers come in as props." size=lg tone=muted
+  grid cols=1,2
+    col
+      card "1 · Your agent writes .terse" description="One node per line. Style is tokens; data is @refs. No classes, imports or closing tags."
+        code @step1 lang=terse
+      card "2 · The compiler checks it" description="A typo'd prop fails the build with file:line:col and the fix."
+        code @step2 lang=text
+    card "3 · You ship ordinary TSX" description="shadcn/ui + Tailwind, readable and typed. Keep it, review it, or stop using Terse."
+      code @step3 lang=tsx
+  row gap=sm wrap=true justify=center
+    badge "Vite plugin"
+    badge "Hot reload"
+    badge "Source maps to .terse lines"
+    badge "Zero runtime"
+    badge "VS Code extension"

@@ -31,8 +31,9 @@ const TONE = {
 }
 const WRAP = { true: 'flex-wrap', false: '' }
 const TEXT_ALIGN = { start: 'text-left', center: 'text-center', end: 'text-right', stretch: 'text-justify' }
-// band: a full-bleed background with vertical rhythm. `dark` re-scopes shadcn's theme variables (inverse).
-const BAND_TONE = { default: '', muted: 'bg-muted/50', inverse: 'dark bg-background text-foreground', primary: 'bg-primary text-primary-foreground' }
+// band: a full-bleed background with vertical rhythm. inverse re-scopes shadcn's theme variables with
+// `dark`, on the card surface so it stands apart in dark mode too.
+const BAND_TONE = { default: '', muted: 'bg-muted/50', inverse: 'dark bg-card text-card-foreground', primary: 'bg-primary text-primary-foreground' }
 const BAND_PAD = { none: 'py-0', xs: 'py-6', sm: 'py-12', md: 'py-16', lg: 'py-24', xl: 'py-32' }
 const SIZE: Record<string, Record<string, string>> = {
   heading: { sm: 'text-lg', md: 'text-2xl', lg: 'text-3xl md:text-4xl', xl: 'text-4xl sm:text-5xl md:text-7xl tracking-tighter' },
