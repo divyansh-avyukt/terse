@@ -109,7 +109,13 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
 
   if (fragmentNeeded) use('Fragment', 'react')
   const header: string[] = []
-  for (const [from, names] of imports) header.push(`import { ${[...names].sort().join(', ')} } from ${JSON.stringify(from)}`)
+  // Adapters register whole component families up front; import only the names the JSX uses.
+  const jsxText = lines.map((l) => l.text).join('\n')
+  const used = (name: string) => new RegExp(`(?<![\\w$])${name.replace(/\$/g, '\\$')}(?![\\w$])`).test(jsxText)
+  for (const [from, names] of imports) {
+    const kept = [...names].filter(used).sort()
+    if (kept.length) header.push(`import { ${kept.join(', ')} } from ${JSON.stringify(from)}`)
+  }
   for (const u of ir.uses) header.push(`import ${u.name} from ${JSON.stringify(u.from)}`)
   const propNames = ir.props.map((p) => p.name)
   // The file name must not shadow an import (input.terse vs shadcn's Input).

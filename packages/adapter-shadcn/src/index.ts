@@ -311,7 +311,10 @@ export function shadcn({ ui = '@/components/ui' }: ShadcnOptions = {}): Componen
         const [Button] = lib('button', 'Button')
         const sort = p.sort && ctx.expr(p.sort)
         const sortIcon = (name: string) => icon(name, 'sm', '"text-muted-foreground"')
-        return h(TableHead, { className, 'aria-sort': p.sort && ctx.lookup(p.sort, { asc: 'ascending', desc: 'descending' }, 'none') },
+        // A runtime lookup yields `string`; React types aria-sort as a union, so narrow it.
+        const sorted = p.sort && ctx.lookup(p.sort, { asc: 'ascending', desc: 'descending' }, 'none')
+        const ariaSort = sorted?.startsWith('{') ? `{(${sorted.slice(1, -1)}) as "ascending" | "descending" | "none"}` : sorted
+        return h(TableHead, { className, 'aria-sort': ariaSort },
           h(Button, { variant: '"ghost"', size: '"sm"', className: '"-mx-3 h-8"', onClick: ctx.attr(p.on) },
             ctx.child(p.label),
             sort

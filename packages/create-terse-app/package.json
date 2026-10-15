@@ -1,6 +1,6 @@
 {
   "name": "create-terse-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Create a Vite + React + shadcn/ui app with Terse, the UI language for coding agents.",
   "license": "MIT",
   "author": "AVYUKT TECH LABS",
@@ -11,10 +11,28 @@
     "directory": "packages/create-terse-app"
   },
   "bugs": "https://github.com/divyansh-avyukt/terse/issues",
-  "keywords": ["terse", "create", "vite", "react", "shadcn", "tailwind", "agents", "llm"],
+  "keywords": [
+    "terse",
+    "create",
+    "vite",
+    "react",
+    "shadcn",
+    "tailwind",
+    "agents",
+    "llm"
+  ],
   "type": "module",
-  "bin": { "create-terse-app": "index.js" },
-  "files": ["index.js", "template"],
-  "engines": { "node": ">=20.12" },
-  "publishConfig": { "access": "public" }
+  "bin": {
+    "create-terse-app": "index.js"
+  },
+  "files": [
+    "index.js",
+    "template"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

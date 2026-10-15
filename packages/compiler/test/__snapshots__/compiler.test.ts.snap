@@ -351,7 +351,7 @@ export default function List() {
 `;
 
 exports[`compiler snapshots > menu 1`] = `
-"import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+"import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { UserIcon } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
@@ -387,7 +387,7 @@ export default function Menu({ user, onSignOut }: MenuProps) {
 
 exports[`compiler snapshots > menuitem 1`] = `
 "import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { CreditCardIcon } from "lucide-react"
 
 export default function Menuitem() {
@@ -561,7 +561,7 @@ export default function Series() {
 `;
 
 exports[`compiler snapshots > sheet 1`] = `
-"import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+"import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 export interface SheetViewProps {
   open?: any
@@ -856,8 +856,8 @@ export default function TabsView({ range, onRange }: TabsViewProps) {
 `;
 
 exports[`compiler snapshots > td 1`] = `
-"import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+"import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 export interface TdProps {
   r?: any
@@ -923,7 +923,7 @@ export default function TextareaView({ note, onNote, err }: TextareaViewProps) {
 `;
 
 exports[`compiler snapshots > th 1`] = `
-"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+"import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react"
 
@@ -937,7 +937,7 @@ export default function Th({ sort, onSort }: ThProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-right" aria-sort={(({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort] ?? "none")}>
+          <TableHead className="text-right" aria-sort={((({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort] ?? "none")) as "ascending" | "descending" | "none"}>
             <Button variant="ghost" size="sm" className="-mx-3 h-8" onClick={onSort}>
               Amount
               {sort === "asc" ? (
@@ -979,7 +979,7 @@ export default function Thead({ rows, sort, onSortAmount }: TheadProps) {
       <TableHeader>
         <TableRow>
           <TableHead>ID</TableHead>
-          <TableHead className="text-right" aria-sort={(({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort?.amount] ?? "none")}>
+          <TableHead className="text-right" aria-sort={((({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort?.amount] ?? "none")) as "ascending" | "descending" | "none"}>
             <Button variant="ghost" size="sm" className="-mx-3 h-8" onClick={onSortAmount}>
               Amount
               {sort?.amount === "asc" ? (
@@ -1012,7 +1012,7 @@ export default function Thead({ rows, sort, onSortAmount }: TheadProps) {
 `;
 
 exports[`compiler snapshots > tr 1`] = `
-"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+"import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 
 export interface TrProps {
   rows?: any
@@ -1036,7 +1036,7 @@ export default function Tr({ rows }: TrProps) {
 
 exports[`compiler snapshots > trigger 1`] = `
 "import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function Trigger() {
   return (
