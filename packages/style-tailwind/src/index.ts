@@ -8,18 +8,34 @@ const ALIGN = { start: 'items-start', center: 'items-center', end: 'items-end', 
 const JUSTIFY = { start: 'justify-start', center: 'justify-center', end: 'justify-end', between: 'justify-between', around: 'justify-around' }
 const COLS = {
   '1': 'grid-cols-1',
-  '2': 'sm:grid-cols-2',
-  '3': 'sm:grid-cols-3',
-  '4': 'sm:grid-cols-2 lg:grid-cols-4',
-  '5': 'sm:grid-cols-3 lg:grid-cols-5',
-  '6': 'sm:grid-cols-3 lg:grid-cols-6',
+  '2': 'grid-cols-1 sm:grid-cols-2',
+  '3': 'grid-cols-1 sm:grid-cols-3',
+  '4': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+  '5': 'grid-cols-1 sm:grid-cols-3 lg:grid-cols-5',
+  '6': 'grid-cols-1 sm:grid-cols-3 lg:grid-cols-6',
   '12': 'grid-cols-12',
+  '1,2': 'grid-cols-1 md:grid-cols-2',
+  '1,3': 'grid-cols-1 md:grid-cols-3',
+  '1,4': 'grid-cols-1 md:grid-cols-4',
+  '2,3': 'grid-cols-2 md:grid-cols-3',
+  '2,4': 'grid-cols-2 md:grid-cols-4',
+  '2,6': 'grid-cols-2 md:grid-cols-6',
+  '3,6': 'grid-cols-3 md:grid-cols-6',
 }
-const TONE = { default: '', muted: 'text-muted-foreground', primary: 'text-primary', destructive: 'text-destructive' }
+const TONE = {
+  default: '',
+  muted: 'text-muted-foreground',
+  primary: 'text-primary',
+  destructive: 'text-destructive',
+  transparent: 'border-0 bg-transparent shadow-none', // card only
+}
 const WRAP = { true: 'flex-wrap', false: '' }
 const SIZE: Record<string, Record<string, string>> = {
   heading: { sm: 'text-lg', md: 'text-2xl', lg: 'text-3xl' },
   image: { sm: 'size-12', md: 'size-24', lg: 'size-48' },
+  page: { sm: 'max-w-3xl', md: 'max-w-5xl', lg: 'max-w-6xl' },
+  chart: { sm: 'h-[200px]', md: 'h-[260px]', lg: 'h-[320px]' },
+  text: { sm: 'text-sm', md: 'text-base', lg: 'text-lg', xl: 'text-2xl font-bold' },
   default: { sm: 'text-sm', md: 'text-base', lg: 'text-lg' },
 }
 

@@ -1,0 +1,10 @@
+# Presentation only: state and handlers come from LoginPage.tsx
+props email, password, message, onEmailChange, onPasswordChange, onLogin
+
+page "Login"
+  card "Sign in" description="Any email and password will do"
+    input label="Email" name=email type=email placeholder="you@example.com" value=@email on=@onEmailChange
+    input label="Password" name=password type=password value=@password on=@onPasswordChange
+    button "Sign in" on=@onLogin
+    if @message
+      text @message tone=muted

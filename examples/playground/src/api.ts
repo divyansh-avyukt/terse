@@ -22,7 +22,7 @@ export async function fetchDashboard() {
       ordersDelta: '+180 since yesterday',
       customers: 573,
       topProducts: [
-        { name: 'Ergonomic chair', sales: 412 },
+        { name: 'Aesthetic chair', sales: 412 },
         { name: 'Standing desk', sales: 301 },
         { name: 'Monitor arm', sales: 188 },
       ],

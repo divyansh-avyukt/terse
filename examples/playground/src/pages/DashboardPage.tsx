@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchDashboard } from '@/api'
-import Dashboard from './Dashboard.terse'
+import Dashboard from '@/views/pages/Dashboard.terse'
 
 type Data = Awaited<ReturnType<typeof fetchDashboard>>
 
 /** TSX owns state and fetching; the .terse view only renders what it is given. */
-export default function DashboardContainer() {
+export default function DashboardPage() {
   const [data, setData] = useState<Data>()
   const [loading, setLoading] = useState(true)
 

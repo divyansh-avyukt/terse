@@ -29,20 +29,58 @@ export default function ButtonView({ onSave, saving }: ButtonViewProps) {
 "
 `;
 
+exports[`compiler snapshots > callout 1`] = `
+"import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { InfoIcon } from "lucide-react"
+
+export default function Callout() {
+  return (
+    <Alert>
+      <InfoIcon />
+      <AlertTitle>Heads up</AlertTitle>
+      <AlertDescription>Fog expected</AlertDescription>
+    </Alert>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > card 1`] = `
 "import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function CardView() {
   return (
-    <Card>
+    <Card className="border-0 bg-transparent shadow-none">
       <CardHeader>
         <CardTitle>Plan</CardTitle>
         <CardDescription>Your current plan</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <p className="text-sm">Pro</p>
+        <p className="text-2xl font-bold">Pro</p>
       </CardContent>
     </Card>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > chart 1`] = `
+"import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+
+export default function Chart() {
+  return (
+    <ChartContainer config={{ s1: { label: "High", color: "var(--chart-1)" }, s2: { label: "Low", color: "var(--chart-2)" } }} className="aspect-auto w-full h-[260px]">
+      <BarChart data={[{ x: "Thu", s1: 72, s2: 55 }, { x: "Fri", s1: 68, s2: 52 }, { x: "Sat", s1: 65, s2: 50 }]} margin={{ left: 8, bottom: 20 }}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} label={{ value: "Day", position: "insideBottom", offset: -14, className: "fill-muted-foreground" }} />
+        <YAxis tickLine={false} axisLine={false} label={{ value: "°F", angle: -90, position: "insideLeft", className: "fill-muted-foreground" }} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartLegend verticalAlign="top" content={<ChartLegendContent verticalAlign="top" />} />
+        <Bar dataKey="s1" fill="var(--color-s1)" radius={4} />
+        <Bar dataKey="s2" fill="var(--color-s2)" radius={4} />
+      </BarChart>
+    </ChartContainer>
   )
 }
 "
@@ -64,7 +102,7 @@ exports[`compiler snapshots > grid 1`] = `
 "
 export default function Grid() {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-2 md:grid-cols-4">
       <p className="text-sm">a</p>
     </div>
   )
@@ -77,6 +115,17 @@ exports[`compiler snapshots > heading 1`] = `
 export default function Heading() {
   return (
     <h1 className="font-semibold tracking-tight text-3xl">Settings</h1>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > icon 1`] = `
+"import { CloudRainIcon } from "lucide-react"
+
+export default function Icon() {
+  return (
+    <CloudRainIcon size={24} />
   )
 }
 "
@@ -112,6 +161,27 @@ export default function InputView({ email, onEmail }: InputViewProps) {
 "
 `;
 
+exports[`compiler snapshots > item 1`] = `
+"
+export interface ItemProps {
+  hours?: any
+}
+
+export default function Item({ hours }: ItemProps) {
+  return (
+    <ul>
+      {hours?.map((h: any, i: number) => (
+        <li key={i} className="flex justify-between border-b py-2 last:border-b-0">
+          <span>{h?.time}</span>
+          <span className="text-right">{h?.temp}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > link 1`] = `
 "
 export default function Link() {
@@ -124,11 +194,29 @@ export default function Link() {
 "
 `;
 
+exports[`compiler snapshots > list 1`] = `
+"
+export default function List() {
+  return (
+    <ul>
+      <li className="flex justify-between border-b py-2 last:border-b-0">
+        <span>9:00 AM</span>
+        <span className="text-right">70°F</span>
+      </li>
+      <li className="flex justify-between border-b py-2 last:border-b-0">
+        <span>11:00 AM</span>
+      </li>
+    </ul>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > page 1`] = `
 "
 export default function Page() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 p-6">
+    <main className="mx-auto flex w-full flex-col gap-4 p-6 max-w-5xl">
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       <p className="text-sm">hi</p>
     </main>
@@ -174,6 +262,25 @@ export default function SeparatorView() {
 "
 `;
 
+exports[`compiler snapshots > series 1`] = `
+"import { ChartContainer } from "@/components/ui/chart"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+
+export default function Series() {
+  return (
+    <ChartContainer config={{ s1: { label: "Rain", color: "var(--chart-1)" } }} className="aspect-auto w-full h-[200px]">
+      <AreaChart data={[{ x: "1", s1: 0 }, { x: "2", s1: 0.1 }, { x: "3", s1: 0.4 }]}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} />
+        <YAxis tickLine={false} axisLine={false} />
+        <Area dataKey="s1" type="natural" fill="var(--color-s1)" fillOpacity={0.4} stroke="var(--color-s1)" />
+      </AreaChart>
+    </ChartContainer>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > spec example: user components, each, if/else 1`] = `
 "import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -189,7 +296,7 @@ export interface DashboardProps {
 
 export default function Dashboard({ user, orders, loading, onRefresh }: DashboardProps) {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
+    <main className="mx-auto flex w-full flex-col gap-6 p-6 max-w-6xl">
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       {loading ? (
         <p className="text-sm">Loading…</p>
@@ -217,7 +324,8 @@ export default function Dashboard({ user, orders, loading, onRefresh }: Dashboar
 `;
 
 exports[`compiler snapshots > stat 1`] = `
-"import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+"import { Card, CardContent } from "@/components/ui/card"
+import { DollarSignIcon } from "lucide-react"
 
 export interface StatProps {
   stats?: any
@@ -226,11 +334,10 @@ export interface StatProps {
 export default function Stat({ stats }: StatProps) {
   return (
     <Card className="flex-1">
-      <CardHeader>
-        <CardDescription>Revenue</CardDescription>
-        <CardTitle className="text-3xl font-semibold tabular-nums">{stats?.revenue}</CardTitle>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2 items-center">
+        <DollarSignIcon size={20} />
+        <p className="text-sm text-muted-foreground">Revenue</p>
+        <p className="text-2xl font-bold">{stats?.revenue}</p>
         <p className="text-xs text-muted-foreground">{stats?.delta}</p>
       </CardContent>
     </Card>

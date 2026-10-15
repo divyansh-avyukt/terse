@@ -17,5 +17,5 @@ pnpm bench           # token comparison: .terse vs hand-written TSX
 | `packages/adapter-shadcn` | IR components → shadcn/ui JSX |
 | `packages/style-tailwind` | style tokens → Tailwind classes |
 | `packages/vite-plugin` | `*.terse` → TSX module, with HMR, source maps and the error overlay |
-| `examples/playground` | Vite app mixing `.terse` and `.tsx` |
+| `examples/playground` | Vite app: `.terse` views in `src/views/`, TSX containers in `src/pages/` |
 | `benchmarks/` | 5 UIs in both forms + `count-tokens.ts` |

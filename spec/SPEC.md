@@ -54,7 +54,8 @@ The component name comes from the file name: `sales-dashboard.terse` becomes `Sa
 | reference | `@stats.revenue`, `@onSave` | A prop or loop variable, with an optional `.path`. Missing values are safe: `@a.b` compiles to `a?.b`. |
 
 Lists (such as `cols=id,customer,total`) are comma-separated with no spaces, or quoted if an item
-has spaces: `headers="Name,Last seen"`.
+has spaces: `headers="Name,Last seen"`. A `from..to` item is a range: `Thu..Wed` is
+`Thu,Fri,Sat,Sun,Mon,Tue,Wed` (weekdays wrap around), `1..5` is `1,2,3,4,5`.
 
 ## Control flow
 
@@ -88,7 +89,7 @@ These are shared by the layout components. They must be literals, not references
 | `gap`, `pad` | `none xs sm md lg xl` |
 | `align` | `start center end stretch` |
 | `justify` | `start center end between around` |
-| `cols` (grid) | `1 2 3 4 5 6 12`. Grids are responsive: 1 column on small screens. |
+| `cols` (grid) | `1 2 3 4 5 6 12`: 1 column on small screens. Or a pair `a,b`: a columns below `md`, b from `md` up (`1,2 1,3 1,4 2,3 2,4 2,6 3,6`). |
 | `tone` | `default muted primary destructive` |
 | `size` | `sm md lg` |
 
@@ -125,6 +126,25 @@ x.terse:3:4: indentation must be a multiple of 2 spaces (found 3)
 4. Use a positional argument for a component's main content (`button "Save"`). Use `key=value`
    for everything else.
 5. If you'd need logic to express something, put it in a TSX parent instead.
+
+## Project layout
+
+All `.terse` files go under `src/views/`. TSX never does, so a file's folder tells you whether it is
+a view or code:
+
+```
+src/
+  views/
+    pages/Dashboard.terse          # a screen's view: rooted at `page`
+    components/ProfileCard.terse   # reusable view: rooted at `card`/`section`
+  pages/DashboardPage.tsx          # container: state, fetching, handlers → renders the view
+  components/UserAvatar.tsx        # TSX components, usable from .terse with `use`
+```
+
+- Each `views/pages/X.terse` has a container `pages/XPage.tsx` that imports it as
+  `import X from "@/views/pages/X.terse"` and passes in everything listed in `props`.
+- `.terse` files import other views by their full alias path:
+  `use ProfileCard from "@/views/components/ProfileCard.terse"`.
 
 ## Toolchain
 
