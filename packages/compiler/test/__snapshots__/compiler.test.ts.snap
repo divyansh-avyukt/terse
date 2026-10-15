@@ -1,0 +1,286 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiler snapshots > badge 1`] = `
+"import { Badge } from "@/components/ui/badge"
+
+export default function BadgeView() {
+  return (
+    <Badge>Active</Badge>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > button 1`] = `
+"import { Button } from "@/components/ui/button"
+
+export interface ButtonViewProps {
+  onSave?: any
+  saving?: any
+}
+
+export default function ButtonView({ onSave, saving }: ButtonViewProps) {
+  return (
+    <Button type="submit" variant="outline" size="sm" disabled={saving} onClick={onSave}>
+      Save
+    </Button>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > card 1`] = `
+"import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+export default function CardView() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Plan</CardTitle>
+        <CardDescription>Your current plan</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-sm">Pro</p>
+      </CardContent>
+    </Card>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > col 1`] = `
+"
+export default function Col() {
+  return (
+    <div className="flex flex-col gap-6 items-start">
+      <p className="text-sm">a</p>
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > grid 1`] = `
+"
+export default function Grid() {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <p className="text-sm">a</p>
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > heading 1`] = `
+"
+export default function Heading() {
+  return (
+    <h1 className="font-semibold tracking-tight text-3xl">Settings</h1>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > image 1`] = `
+"
+export default function Image() {
+  return (
+    <img src="/logo.png" alt="Logo" className="rounded-md object-cover size-12" />
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > input 1`] = `
+"import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+export interface InputViewProps {
+  email?: any
+  onEmail?: any
+}
+
+export default function InputView({ email, onEmail }: InputViewProps) {
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor="email">Email</Label>
+      <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => onEmail?.(e.target.value)} />
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > link 1`] = `
+"
+export default function Link() {
+  return (
+    <a href="https://example.com" className="font-medium underline-offset-4 hover:underline text-muted-foreground">
+      Docs
+    </a>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > page 1`] = `
+"
+export default function Page() {
+  return (
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 p-6">
+      <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+      <p className="text-sm">hi</p>
+    </main>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > row 1`] = `
+"
+export default function Row() {
+  return (
+    <div className="flex flex-row gap-2 items-center justify-between flex-wrap">
+      <p className="text-sm">a</p>
+      <p className="text-sm">b</p>
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > section 1`] = `
+"
+export default function Section() {
+  return (
+    <section className="flex flex-col gap-4">
+      <h2 className="text-xl font-semibold tracking-tight">Billing</h2>
+      <p className="text-sm">hi</p>
+    </section>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > separator 1`] = `
+"import { Separator } from "@/components/ui/separator"
+
+export default function SeparatorView() {
+  return (
+    <Separator />
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > spec example: user components, each, if/else 1`] = `
+"import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Fragment } from "react"
+import UserAvatar from "@/components/UserAvatar"
+
+export interface DashboardProps {
+  user?: any
+  orders?: any
+  loading?: any
+  onRefresh?: any
+}
+
+export default function Dashboard({ user, orders, loading, onRefresh }: DashboardProps) {
+  return (
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
+      <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+      {loading ? (
+        <p className="text-sm">Loading…</p>
+      ) : (
+        <>
+          {orders?.map((order: any, i: number) => (
+            <Fragment key={i}>
+              <p className="text-sm">{order?.customer}</p>
+              <Badge variant="secondary">{order?.status}</Badge>
+            </Fragment>
+          ))}
+        </>
+      )}
+      {!orders ? (
+        <p className="text-sm">No orders</p>
+      ) : null}
+      <div className="flex flex-row gap-4 items-center justify-between">
+        <UserAvatar user={user} size="sm" />
+        <Button variant="outline" onClick={onRefresh}>Refresh</Button>
+      </div>
+    </main>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > stat 1`] = `
+"import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+export interface StatProps {
+  stats?: any
+}
+
+export default function Stat({ stats }: StatProps) {
+  return (
+    <Card className="flex-1">
+      <CardHeader>
+        <CardDescription>Revenue</CardDescription>
+        <CardTitle className="text-3xl font-semibold tabular-nums">{stats?.revenue}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-xs text-muted-foreground">{stats?.delta}</p>
+      </CardContent>
+    </Card>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > table 1`] = `
+"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+export interface TableViewProps {
+  orders?: any
+}
+
+export default function TableView({ orders }: TableViewProps) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>ID</TableHead>
+          <TableHead>Customer</TableHead>
+          <TableHead>Date</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {orders?.map((row: any, i: number) => (
+          <TableRow key={i}>
+            <TableCell>{row?.id}</TableCell>
+            <TableCell>{row?.customer}</TableCell>
+            <TableCell>{row?.createdAt}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > text 1`] = `
+"
+export interface TextProps {
+  user?: any
+}
+
+export default function Text({ user }: TextProps) {
+  return (
+    <p className="text-lg text-muted-foreground">{user?.name}</p>
+  )
+}
+"
+`;
