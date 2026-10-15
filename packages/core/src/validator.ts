@@ -1,7 +1,7 @@
 import type { RefValue, Value } from './ast.js'
 import { didYouMean, type Diagnostic, type Loc } from './errors.js'
 import type { IR, IRNode } from './ir.js'
-import { COMPONENTS } from './schema.js'
+import { COMPONENTS, expandList } from './schema.js'
 
 /** Semantic checks: component names, props and their values, and that every @ref is in scope. */
 export function validate(ir: IR): Diagnostic[] {
@@ -26,17 +26,18 @@ export function validate(ir: IR): Diagnostic[] {
     report(`unknown reference '@${r.path.join('.')}'${hint || ` — declare it with: props ${root}`}`, r)
   }
 
-  const walk = (nodes: IRNode[], scope: Set<string>) => {
+  // `parent` is the nearest enclosing component's name (each/if are transparent).
+  const walk = (nodes: IRNode[], scope: Set<string>, parent?: string) => {
     for (const n of nodes) {
       if (n.kind === 'each') {
         checkRef(n.source, scope)
-        walk(n.children, new Set(scope).add(n.as))
+        walk(n.children, new Set(scope).add(n.as), parent)
         continue
       }
       if (n.kind === 'if') {
         checkRef(n.cond, scope)
-        walk(n.then, scope)
-        if (n.else) walk(n.else, scope)
+        walk(n.then, scope, parent)
+        if (n.else) walk(n.else, scope, parent)
         continue
       }
 
@@ -58,7 +59,12 @@ export function validate(ir: IR): Diagnostic[] {
       }
       for (const r of spec?.required ?? []) if (!(r in n.props)) report(`'${n.name}' requires '${r}'`, n)
       if (spec && !spec.children && n.children.length) report(`'${n.name}' cannot have children`, n.children[0])
-      walk(n.children, scope)
+      if (typeof spec?.children === 'string') {
+        const only = spec.children
+        for (const c of n.children) if (c.kind !== 'component' || c.name !== only) report(`'${n.name}' can only contain '${only}' lines`, c)
+      }
+      if (spec?.parent && parent !== spec.parent) report(`'${n.name}' must be inside a '${spec.parent}'`, n)
+      walk(n.children, scope, n.name)
     }
   }
 
@@ -77,7 +83,16 @@ function checkValue(comp: string, key: string, v: Value, type: (typeof COMPONENT
     report(`'${key}' on '${comp}' must be a reference like @${type === 'handler' ? 'onSave' : 'items'}, got ${shown}`, v)
   } else if (type === 'bool' && v.kind === 'lit' && typeof v.value !== 'boolean') {
     report(`'${key}' on '${comp}' must be true, false or a reference, got ${shown}`, v)
-  } else if (type === 'list' && v.kind === 'ref') {
-    report(`'${key}' on '${comp}' must be a literal list like a,b,c`, v)
+  } else if (type === 'literal' && v.kind === 'ref') {
+    report(`'${key}' on '${comp}' must be a literal, not a reference`, v)
+  } else if (type === 'list' || type === 'numbers') {
+    if (v.kind === 'ref') return report(`'${key}' on '${comp}' must be a literal list like ${type === 'list' ? 'a,b,c' : '1,2,3'}`, v)
+    try {
+      const items = expandList(String(v.value))
+      const bad = type === 'numbers' && items.find((x) => !Number.isFinite(Number(x)))
+      if (bad !== undefined && bad !== false) report(`'${key}' on '${comp}' must be numbers like 1,2.5,3 — '${bad}' is not a number`, v)
+    } catch (e) {
+      report((e as Error).message, v)
+    }
   }
 }

@@ -1,0 +1,12 @@
+props claudeMd, claudeLabel, onCopyClaude, promptLabel, onCopyPrompt
+
+band id=agents
+  col size=lg gap=sm
+    text "For agents" tone=primary
+    heading "Teach your agent Terse with **one paste.**" size=lg
+    text "The spec is written for models to learn from. Add this to `CLAUDE.md` or `AGENTS.md`, or point any agent at [/llms.txt](/llms.txt) for the full language in one file." size=lg tone=muted
+  code @claudeMd lang=md title="CLAUDE.md"
+  row gap=sm wrap=true
+    button @claudeLabel on=@onCopyClaude
+    button @promptLabel variant=outline on=@onCopyPrompt
+    button "Read the spec" href="/llms.txt" variant=ghost

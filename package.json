@@ -16,5 +16,6 @@
     "js-tiktoken": "^1.0.21",
     "typescript": "^5.9.3",
     "vitest": "^5.0.4"
-  }
+  },
+  "packageManager": "pnpm@12.8.1"
 }

@@ -1,0 +1,14 @@
+props config
+
+band id=adapters tone=muted
+  grid cols=1,2 gap=xl
+    col gap=md
+      text "Portable" tone=primary
+      heading "One source. Any design system." size=lg
+      text "The compiler only talks to two small interfaces: a `ComponentAdapter` maps components to JSX, and a `StyleAdapter` maps tokens to classes. Change them in `terse.config.ts`; your `.terse` files stay the same." size=lg tone=muted
+      list
+        item "shadcn/ui + Tailwind" "Shipped"
+        item "Material UI" "Wanted · good first adapter"
+        item "Chakra UI" "Wanted"
+        item "React Native" "Exploring"
+    code @config lang=ts title="terse.config.ts"

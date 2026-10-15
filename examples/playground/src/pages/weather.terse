@@ -1,0 +1,33 @@
+page size=md gap=md
+  card tone=transparent
+    row justify=between
+      col gap=xs
+        text "San Francisco, CA" size=xl
+        text "Thursday, July 10, 2025" tone=muted
+      col gap=xs align=end
+        row gap=xs
+          icon sun size=lg
+          text "72°F" size=xl
+        text "Sunny • Feels like 69°F" tone=muted
+  grid cols=2,4
+    stat "Humidity" "64%" icon=droplets align=center
+    stat "Wind" "12 mph" icon=wind align=center
+    stat "UV Index" "6 (High)" icon=sun align=center
+    stat "Visibility" "10 mi" icon=eye align=center
+  card "7-Day Forecast" description="High / Low temperatures"
+    chart bar x=Thu..Wed xlabel=Day ylabel=°F tooltip=true legend=true
+      series "High" 72,68,65,70,74,76,73
+      series "Low" 55,52,50,54,57,59,56
+  grid cols=1,2
+    card "Hourly Forecast" description="Next 6 hours"
+      list
+        item "9:00 AM" "70°F ☀️ Sunny"
+        item "11:00 AM" "72°F ☀️ Sunny"
+        item "1:00 PM" "74°F 🌤 Partly Cloudy"
+        item "3:00 PM" "73°F 🌤 Partly Cloudy"
+        item "5:00 PM" "70°F 🌥 Mostly Cloudy"
+        item "7:00 PM" "66°F 🌙 Clear"
+    card "Conditions Overview" description="Precipitation & alerts"
+      chart area x=Thu..Wed xlabel=Day ylabel="Precip (in)" size=sm curve=natural
+        series "Precipitation" 0.0,0.1,0.4,0.2,0.0,0.0,0.1
+      callout "Marine Layer Advisory" "Coastal fog expected Friday morning. Visibility may drop to 2 miles near the shore." icon=info

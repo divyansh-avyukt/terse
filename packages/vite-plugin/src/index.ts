@@ -19,11 +19,33 @@ export default function terse(config: TerseConfig): Plugin {
   return {
     name: 'terse',
     enforce: 'pre',
+    // The dep optimizer's scanner resolves through plugins but loads files itself. Teach it to
+    // compile views, so deps reached only through .terse (recharts, radix, ...) get pre-bundled
+    // up front instead of triggering a reload on first visit.
+    config: () => ({
+      optimizeDeps: {
+        rolldownOptions: {
+          plugins: [
+            {
+              name: 'terse:scan',
+              async load(id: string) {
+                if (!id.endsWith('.terse' + SUFFIX)) return
+                const file = id.slice(0, -SUFFIX.length)
+                try {
+                  return { code: compile(await readFile(file, 'utf8'), { ...config, file }).code, moduleType: 'tsx' as const }
+                } catch {
+                  return { code: 'export default null', moduleType: 'js' as const } // reported when the page loads it
+                }
+              },
+            },
+          ],
+        },
+      },
+    }),
     async resolveId(source, importer, options) {
       const path = source.split('?')[0]
       if (!path.endsWith('.terse') && !path.endsWith('.terse' + SUFFIX)) return
-      // The dep-optimizer scan doesn't run load hooks; .terse files only import local modules anyway.
-      if ((options as { scan?: boolean }).scan) return { id: source, external: true }
+      if (path.endsWith('.terse') && source !== path) return // x.terse?raw etc.: leave to Vite
       const real = path.endsWith(SUFFIX) ? path.slice(0, -SUFFIX.length) : path
       const resolved = await this.resolve(real, importer, { ...options, skipSelf: true })
       return resolved && resolved.id + SUFFIX

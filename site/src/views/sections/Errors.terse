@@ -1,0 +1,17 @@
+props bad, error, fixed
+
+band id=errors
+  grid cols=1,2 gap=xl
+    col gap=md
+      text "Self-correcting" tone=primary
+      heading "Errors your agent can fix in one edit." size=lg
+      text "A small vocabulary and precise diagnostics make the compiler a tight feedback loop. Every error has `file:line:col` and, when there's a close match, the fix." size=lg tone=muted
+      list
+        item "Unknown component" "did you mean 'button'?"
+        item "Unknown @ref" "did you mean '@stats'?"
+        item "Invalid token" "expected none|xs|sm|md|lg|xl"
+        item "Bad indentation" "multiple of 2 spaces"
+    col gap=sm
+      code @bad lang=terse title="Dashboard.terse"
+      code @error lang=text title="terse compiler · real output"
+      code @fixed lang=terse title="After one edit"

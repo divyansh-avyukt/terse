@@ -1,0 +1,19 @@
+props pageStats, github
+
+band pad=md tone=muted gap=md
+  row justify=between wrap=true gap=lg align=start
+    col gap=xs
+      row gap=sm
+        text "**terse**" size=lg
+        badge "v0" tone=muted
+      text "The UI language for coding agents." tone=muted
+      text @pageStats size=sm tone=muted
+    row gap=md wrap=true
+      link "GitHub" @github tone=muted
+      link "Spec" "/llms.txt" tone=muted
+      link "Benchmarks" "#benchmarks" tone=muted
+      link "Get started" "#start" tone=muted
+  separator
+  row justify=between wrap=true
+    text "MIT License · © 2026 AVYUKT TECH LABS" size=sm tone=muted
+    text "terse-ui.dev — built with Terse, React, shadcn/ui and Tailwind" size=sm tone=muted

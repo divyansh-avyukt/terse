@@ -1,0 +1,19 @@
+props rows, saved, pair, weather
+
+band id=benchmarks tone=muted
+  col size=lg gap=sm
+    text "Benchmarks" tone=primary
+    heading "Same UI. **A quarter of the tokens.**" size=lg
+    text "Five common screens, each written twice: in Terse, and as the idiomatic shadcn + Tailwind TSX an agent writes today. Tokens counted with `o200k_base`." size=lg tone=muted
+  grid cols=1,3
+    stat "Fewer tokens, all five screens" @saved
+    stat "Terse vs TSX, all five screens" @pair
+    stat "Weather demo, Terse vs TSX" @weather
+  grid cols=1,2
+    card "Tokens per screen" description="Lower is better"
+      chart bar x=dashboard,data-table,login,pricing,settings tooltip=true legend=true
+        series "Terse" 188,161,122,102,182
+        series "TSX" 927,630,441,379,753
+    card "Results" description="Reproduce with: pnpm bench"
+      table @rows cols=name,terse,tsx,saved headers="Screen,Terse,TSX,Saved"
+  text "The TSX that Terse compiles to is about the same size as the TSX an agent writes directly, so the savings aren't bought with worse code. That TSX includes typed props, as agents write them." size=sm tone=muted

@@ -1,0 +1,10 @@
+# Presentation only: state and handlers come from SettingsPage.tsx
+use ProfileCard from "@/views/components/ProfileCard.terse"
+props user, editing, name, onEdit, onNameChange, onSave
+
+page "Settings"
+  ProfileCard user=@user onEdit=@onEdit
+  if @editing
+    row align=end gap=sm
+      input label="Display name" name=name value=@name on=@onNameChange
+      button "Save" on=@onSave

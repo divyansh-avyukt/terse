@@ -1,7 +1,27 @@
 {
   "name": "@terse/vite-plugin",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Vite plugin that compiles .terse files to React, with HMR, source maps and the error overlay.",
+  "license": "MIT",
+  "author": "AVYUKT TECH LABS",
+  "homepage": "https://terse-ui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AVYUKT-TECH-LABS/terse.git",
+    "directory": "packages/vite-plugin"
+  },
+  "bugs": "https://github.com/AVYUKT-TECH-LABS/terse/issues",
+  "keywords": [
+    "terse",
+    "ui",
+    "llm",
+    "agents",
+    "react",
+    "shadcn",
+    "tailwind",
+    "vite",
+    "compiler"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,14 +34,23 @@
       "types": "./client.d.ts"
     }
   },
+  "files": [
+    "dist",
+    "src",
+    "client.d.ts"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@terse/compiler": "workspace:*",
     "@terse/core": "workspace:*"
   },
-  "devDependencies": {
-    "vite": "^8.3.4"
-  },
   "peerDependencies": {
     "vite": ">=8"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
   }
 }
