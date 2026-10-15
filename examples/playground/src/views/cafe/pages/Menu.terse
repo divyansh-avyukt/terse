@@ -1,0 +1,46 @@
+use EmptyState from "@/views/cafe/components/EmptyState.terse"
+props category, onCategory, items, summary
+props dialogOpen, onDialog, form, errors, categories, onName, onPrice, onCategoryField, onDescription, onImage, onSave, onCancel
+
+page gap=md pad=md
+  row justify=between wrap=true
+    tabs value=@category on=@onCategory
+      tab "All"
+      tab "Coffee"
+      tab "Tea"
+      tab "Cold drinks"
+      tab "Bakery"
+      tab "Food"
+    dialog "Add menu item" description="It appears on every store's menu right away." open=@dialogOpen on=@onDialog
+      trigger
+        button "Add item" icon=plus
+      input "Name" name=item-name placeholder="Cortado" value=@form.name on=@onName error=@errors.name
+      grid cols=2 gap=sm
+        input "Price (₹)" name=item-price type=number placeholder="180" value=@form.price on=@onPrice error=@errors.price
+        select "Category" name=item-category options=@categories placeholder="Choose…" value=@form.category on=@onCategoryField error=@errors.category
+      textarea "Description" name=item-description placeholder="What's in it, how it's served" rows=3 value=@form.description on=@onDescription error=@errors.description
+      input "Image URL" name=item-image type=url placeholder="https://…" value=@form.image on=@onImage error=@errors.image
+      row justify=end gap=sm
+        button "Cancel" variant=outline on=@onCancel
+        button "Save item" on=@onSave
+  text @summary tone=muted
+  if not @items.length
+    card
+      EmptyState title="Nothing in this category yet" description="Add an item to get started."
+  else
+    grid cols=1,2,3
+      each @items as m
+        card gap=sm
+          row justify=between align=start
+            row gap=sm
+              if @m.image
+                image @m.image alt=@m.name size=sm
+              col gap=none
+                heading @m.name level=4
+                text @m.category tone=muted
+            text @m.price size=lg
+          text @m.description tone=muted
+          separator
+          row justify=between
+            badge @m.sold tone=muted
+            switch "Available" checked=@m.available on=@m.onToggle

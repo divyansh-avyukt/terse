@@ -93,9 +93,29 @@ These are shared by the layout components. They must be literals, not references
 | `gap`, `pad` | `none xs sm md lg xl` |
 | `align` | `start center end stretch` |
 | `justify` | `start center end between around` |
-| `cols` (grid) | `1 2 3 4 5 6 12`: 1 column on small screens. Or a pair `a,b`: a columns below `md`, b from `md` up (`1,2 1,3 1,4 2,3 2,4 2,6 3,6`). |
-| `tone` | `default muted primary destructive` |
+| `cols` (grid) | `1 2 3 4 5 6 12`: 1 column on small screens. Or a pair `a,b`: a columns below `md`, b from `md` up (`1,2 1,3 1,4 2,3 2,4 2,6 3,6`), or a triple `a,b,c` that adds `lg` (`1,1,2 1,1,3 1,2,3 1,2,4 2,2,4`). |
+| `tone` | `default muted primary success warning destructive` |
 | `size` | `sm md lg` |
+| `grow` (row, col) | `true false`: take the remaining space |
+| `span` (card, col) | `1 2 3`: grid columns taken from `lg` up |
+| `hide` (any component) | `mobile` (below md), `desktop` (md and up), `collapsed` (inside an icons-only `sidebar`) |
+
+A few token props are marked *runtime* in components.md (`tone` on `badge`, `stat` and `text`). They also
+take a `@ref` whose value is one of the same words, so a status can pick its colour:
+`badge @t.status tone=@t.tone`. The class for every possible value is still written out at compile time.
+
+## Slots: overlays and tables
+
+Some components place different children in different spots. `menu`, `dialog` and `sheet` take an optional
+`trigger` child (what opens them); every other child is the content. A `table` with children takes one
+`thead` and then `tr` rows:
+
+```
+menu label="My account"
+  trigger
+    avatar @user.photo fallback=@user.initials
+  menuitem "Sign out" on=@onSignOut
+```
 
 ## User components
 

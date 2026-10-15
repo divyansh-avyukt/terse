@@ -1,0 +1,25 @@
+# Transactions table, shared by the Transactions page and a customer's Transactions tab.
+# rows: txRow() objects. sort: { [column]: "asc" | "desc" }. sortBy: { [column]: handler }.
+use StatusBadge from "@/views/cafe/components/StatusBadge.terse"
+props rows, sort, sortBy
+
+table
+  thead
+    th "ID" sort=@sort.id on=@sortBy.id hide=mobile
+    th "Time" sort=@sort.time on=@sortBy.time hide=mobile
+    th "Customer" sort=@sort.customer on=@sortBy.customer
+    th "Method" hide=mobile
+    th "Amount" align=end sort=@sort.amount on=@sortBy.amount
+    th "Status"
+  each @rows as t
+    tr on=@t.onOpen
+      td @t.id hide=mobile
+      td @t.time hide=mobile
+      td
+        row gap=sm
+          avatar fallback=@t.initials hide=mobile
+          text @t.customer
+      td @t.method hide=mobile
+      td @t.amount align=end
+      td
+        StatusBadge status=@t.status tone=@t.tone

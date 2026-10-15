@@ -1,0 +1,151 @@
+{
+  "tokenizer": "js-tiktoken o200k_base (APPROXIMATION: not Claude’s tokenizer)",
+  "views": [
+    {
+      "file": "views/cafe/Layout.terse",
+      "lines": 40,
+      "terse": 502,
+      "compiled": 3052
+    },
+    {
+      "file": "views/cafe/components/EmptyState.terse",
+      "lines": 9,
+      "terse": 81,
+      "compiled": 186
+    },
+    {
+      "file": "views/cafe/components/StatRow.terse",
+      "lines": 6,
+      "terse": 55,
+      "compiled": 249
+    },
+    {
+      "file": "views/cafe/components/StatusBadge.terse",
+      "lines": 4,
+      "terse": 32,
+      "compiled": 170
+    },
+    {
+      "file": "views/cafe/components/TransactionSheet.terse",
+      "lines": 34,
+      "terse": 312,
+      "compiled": 952
+    },
+    {
+      "file": "views/cafe/components/TransactionsTable.terse",
+      "lines": 25,
+      "terse": 251,
+      "compiled": 1175
+    },
+    {
+      "file": "views/cafe/pages/CustomerDetail.terse",
+      "lines": 54,
+      "terse": 556,
+      "compiled": 1838
+    },
+    {
+      "file": "views/cafe/pages/Customers.terse",
+      "lines": 50,
+      "terse": 427,
+      "compiled": 1564
+    },
+    {
+      "file": "views/cafe/pages/Menu.terse",
+      "lines": 46,
+      "terse": 527,
+      "compiled": 1788
+    },
+    {
+      "file": "views/cafe/pages/Overview.terse",
+      "lines": 46,
+      "terse": 391,
+      "compiled": 1481
+    },
+    {
+      "file": "views/cafe/pages/Settings.terse",
+      "lines": 81,
+      "terse": 1115,
+      "compiled": 3865
+    },
+    {
+      "file": "views/cafe/pages/Transactions.terse",
+      "lines": 36,
+      "terse": 494,
+      "compiled": 1622
+    }
+  ],
+  "containers": [
+    {
+      "file": "pages/cafe/AppShell.tsx",
+      "tokens": 835
+    },
+    {
+      "file": "pages/cafe/CustomerDetailPage.tsx",
+      "tokens": 978
+    },
+    {
+      "file": "pages/cafe/CustomersPage.tsx",
+      "tokens": 464
+    },
+    {
+      "file": "pages/cafe/MenuPage.tsx",
+      "tokens": 937
+    },
+    {
+      "file": "pages/cafe/OverviewPage.tsx",
+      "tokens": 1261
+    },
+    {
+      "file": "pages/cafe/SettingsPage.tsx",
+      "tokens": 1435
+    },
+    {
+      "file": "pages/cafe/TransactionsPage.tsx",
+      "tokens": 1674
+    }
+  ],
+  "helpers": [
+    {
+      "file": "app/data.ts",
+      "tokens": 2778
+    },
+    {
+      "file": "app/format.ts",
+      "tokens": 855
+    },
+    {
+      "file": "app/router.ts",
+      "tokens": 347
+    },
+    {
+      "file": "app/sort.ts",
+      "tokens": 364
+    }
+  ],
+  "calibration": [
+    {
+      "view": "views/cafe/pages/Overview.terse",
+      "terse": 391,
+      "compiled": 1481,
+      "hand": 1611
+    },
+    {
+      "view": "views/cafe/pages/Settings.terse",
+      "terse": 1115,
+      "compiled": 3865,
+      "hand": 3278
+    }
+  ],
+  "totals": {
+    "terse": 4743,
+    "compiled": 17942,
+    "containers": 7584,
+    "helpers": 4344
+  },
+  "estimate": {
+    "handPerTerse": 3.246347941567065,
+    "handPerCompiled": 0.9145155256266367,
+    "byTerseRatio": 15397,
+    "byCompiledRatio": 16408
+  }
+}

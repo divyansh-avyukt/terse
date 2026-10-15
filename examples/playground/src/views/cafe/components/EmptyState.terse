@@ -1,0 +1,9 @@
+# Centered "nothing here" message with an optional action.
+props title, description, action, onAction
+
+col align=center gap=sm pad=xl
+  icon inbox size=lg tone=muted
+  heading @title level=3 size=sm
+  text @description tone=muted
+  if @action
+    button @action variant=outline on=@onAction

@@ -1,0 +1,36 @@
+use TransactionsTable from "@/views/cafe/components/TransactionsTable.terse"
+use EmptyState from "@/views/cafe/components/EmptyState.terse"
+use TransactionSheet from "@/views/cafe/components/TransactionSheet.terse"
+props filters, onSearch, onStatus, onMethod, onFrom, onTo, onClear, noFilters
+props loading, error, onRetry, empty
+props rows, sort, sortBy, showing, onPrev, onNext, noPrev, noNext
+props selected, sheetOpen, onSheetOpen, onRefund, onDownload
+
+page gap=md pad=md
+  card
+    grid cols=2,3 gap=sm
+      input "Search" type=search icon=search placeholder="ID or customer" value=@filters.search on=@onSearch
+      select "Status" options=All,Success,Failed,Refunded value=@filters.status on=@onStatus
+      select "Method" options=All,Palm,UPI,Card,Cash value=@filters.method on=@onMethod
+      input "From" type=date value=@filters.from on=@onFrom
+      input "To" type=date value=@filters.to on=@onTo
+      col justify=end
+        button "Clear filters" variant=outline icon=x on=@onClear disabled=@noFilters
+  card
+    if @loading
+      skeleton lines=10 size=md
+    else
+      if @error
+        callout "Couldn't load transactions" @error tone=destructive icon=circle-alert
+          button "Retry" variant=outline icon=refresh-cw on=@onRetry
+      else
+        if @empty
+          EmptyState title="No transactions match your filters" description="Try a wider date range or clear the filters." action="Clear filters" onAction=@onClear
+        else
+          TransactionsTable rows=@rows sort=@sort sortBy=@sortBy
+          row justify=between wrap=true
+            text @showing tone=muted
+            row gap=sm
+              button "Previous" variant=outline size=sm icon=chevron-left on=@onPrev disabled=@noPrev
+              button "Next" variant=outline size=sm on=@onNext disabled=@noNext
+  TransactionSheet tx=@selected open=@sheetOpen onOpenChange=@onSheetOpen onRefund=@onRefund onDownload=@onDownload

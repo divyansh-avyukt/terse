@@ -1,0 +1,50 @@
+use EmptyState from "@/views/cafe/components/EmptyState.terse"
+props customers, count, search, onSearch, view, onView, isGrid
+
+page gap=md pad=md
+  row justify=between gap=sm
+    col grow=true
+      input placeholder="Search customers" type=search icon=search value=@search on=@onSearch
+    tabs value=@view on=@onView
+      tab "Grid" value=grid icon=layout-grid
+      tab "List" value=list icon=list
+  text @count tone=muted
+  if not @customers.length
+    card
+      EmptyState title="No customers found" description="Check the spelling, or search by email."
+  else
+    if @isGrid
+      grid cols=1,2,3
+        each @customers as c
+          card on=@c.onOpen gap=sm
+            row gap=sm
+              avatar fallback=@c.initials size=md
+              col gap=none grow=true
+                text @c.name size=md
+                text @c.lastVisit tone=muted
+              badge @c.tier tone=@c.tierTone
+            row justify=between
+              text @c.visits tone=muted
+              text @c.spent
+    else
+      card
+        table
+          thead
+            th "Customer"
+            th "Tier"
+            th "Visits" align=end hide=mobile
+            th "Spent" align=end
+            th "Last visit" hide=mobile
+          each @customers as c
+            tr on=@c.onOpen
+              td
+                row gap=sm
+                  avatar fallback=@c.initials hide=mobile
+                  col gap=none
+                    text @c.name
+                    text @c.email tone=muted hide=mobile
+              td
+                badge @c.tier tone=@c.tierTone
+              td @c.visitCount align=end hide=mobile
+              td @c.spent align=end
+              td @c.lastVisit hide=mobile

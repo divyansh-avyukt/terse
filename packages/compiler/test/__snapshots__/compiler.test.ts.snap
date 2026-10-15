@@ -1,11 +1,29 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`compiler snapshots > avatar 1`] = `
+"import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+export interface AvatarViewProps {
+  c?: any
+}
+
+export default function AvatarView({ c }: AvatarViewProps) {
+  return (
+    <Avatar className="size-10">
+      <AvatarImage src={c?.photo} alt="" />
+      <AvatarFallback className="text-xs">{c?.initials}</AvatarFallback>
+    </Avatar>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > badge 1`] = `
 "import { Badge } from "@/components/ui/badge"
 
 export default function BadgeView() {
   return (
-    <Badge>Active</Badge>
+    <Badge variant="default">Active</Badge>
   )
 }
 "
@@ -24,6 +42,27 @@ export default function Band() {
         </h2>
       </div>
     </section>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > bar 1`] = `
+"import { Button } from "@/components/ui/button"
+import { MenuIcon } from "lucide-react"
+
+export interface BarProps {
+  title?: any
+}
+
+export default function Bar({ title }: BarProps) {
+  return (
+    <header className="bg-background/95 sticky top-0 z-20 flex h-14 shrink-0 items-center border-b px-4 backdrop-blur gap-2 justify-between">
+      <h1 className="font-semibold tracking-tight text-balance text-lg">{title}</h1>
+      <Button className="md:hidden" variant="ghost" size="icon" aria-label="Menu">
+        <MenuIcon size={16} />
+      </Button>
+    </header>
   )
 }
 "
@@ -91,7 +130,7 @@ export default function Chart() {
     <ChartContainer config={{ s1: { label: "High", color: "var(--chart-1)" }, s2: { label: "Low", color: "var(--chart-2)" } }} className="aspect-auto w-full h-[260px]">
       <BarChart data={[{ x: "Thu", s1: 72, s2: 55 }, { x: "Fri", s1: 68, s2: 52 }, { x: "Sat", s1: 65, s2: 50 }]} margin={{ left: 8, bottom: 20 }}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} label={{ value: "Day", position: "insideBottom", offset: -14, className: "fill-muted-foreground" }} />
+        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} minTickGap={24} label={{ value: "Day", position: "insideBottom", offset: -14, className: "fill-muted-foreground" }} />
         <YAxis tickLine={false} axisLine={false} label={{ value: "°F", angle: -90, position: "insideLeft", className: "fill-muted-foreground" }} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend verticalAlign="top" content={<ChartLegendContent verticalAlign="top" />} />
@@ -99,6 +138,28 @@ export default function Chart() {
         <Bar dataKey="s2" fill="var(--color-s2)" radius={4} />
       </BarChart>
     </ChartContainer>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > checkbox 1`] = `
+"import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
+
+export interface CheckboxViewProps {
+  daily?: any
+  onDaily?: any
+}
+
+export default function CheckboxView({ daily, onDaily }: CheckboxViewProps) {
+  return (
+    <Label className="flex items-start gap-3">
+      <Checkbox checked={daily} onCheckedChange={onDaily} />
+      <span className="flex flex-col gap-1">
+        <span>Daily summary</span>
+      </span>
+    </Label>
   )
 }
 "
@@ -129,6 +190,47 @@ export default function Col() {
     <div className="flex flex-col gap-6 items-start">
       <p className="text-sm">a</p>
     </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > dialog 1`] = `
+"import { Button } from "@/components/ui/button"
+import { PlusIcon } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+
+export interface DialogViewProps {
+  open?: any
+  onOpen?: any
+  onSave?: any
+}
+
+export default function DialogView({ open, onOpen, onSave }: DialogViewProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpen}>
+      <DialogTrigger asChild={true}>
+        <Button className="w-fit">
+          <PlusIcon size={16} />
+          Add item
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Add item</DialogTitle>
+          <DialogDescription>New menu item</DialogDescription>
+        </DialogHeader>
+        <div className="flex flex-col gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" />
+          </div>
+          <Button className="w-fit" onClick={onSave}>Save</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 "
@@ -207,7 +309,7 @@ export default function Item({ hours }: ItemProps) {
   return (
     <ul>
       {hours?.map((h: any, i: number) => (
-        <li key={i} className="flex justify-between border-b py-2 last:border-b-0">
+        <li key={i} className="flex justify-between gap-4 border-b py-2 last:border-b-0">
           <span>{h?.time}</span>
           <span className="text-right">{h?.temp}</span>
         </li>
@@ -235,14 +337,94 @@ exports[`compiler snapshots > list 1`] = `
 export default function List() {
   return (
     <ul>
-      <li className="flex justify-between border-b py-2 last:border-b-0">
+      <li className="flex justify-between gap-4 border-b py-2 last:border-b-0">
         <span>9:00 AM</span>
         <span className="text-right">70°F</span>
       </li>
-      <li className="flex justify-between border-b py-2 last:border-b-0">
+      <li className="flex justify-between gap-4 border-b py-2 last:border-b-0">
         <span>11:00 AM</span>
       </li>
     </ul>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > menu 1`] = `
+"import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { UserIcon } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+
+export interface MenuProps {
+  user?: any
+  onSignOut?: any
+}
+
+export default function Menu({ user, onSignOut }: MenuProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="focus-visible:ring-ring/50 rounded-full outline-none focus-visible:ring-[3px]">
+        <Avatar className="size-8">
+          <AvatarFallback className="text-xs">{user?.initials}</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuLabel>My account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <UserIcon size={16} />
+          Profile
+        </DropdownMenuItem>
+        <Separator />
+        <DropdownMenuItem variant="destructive" onClick={onSignOut}>Sign out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > menuitem 1`] = `
+"import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { CreditCardIcon } from "lucide-react"
+
+export default function Menuitem() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild={true}>
+        <Button className="w-fit" variant="outline">Open</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuItem>
+          <CreditCardIcon size={16} />
+          Billing
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > navitem 1`] = `
+"import { Button } from "@/components/ui/button"
+import { UsersIcon } from "lucide-react"
+
+export interface NavitemProps {
+  active?: any
+  onGo?: any
+}
+
+export default function Navitem({ active, onGo }: NavitemProps) {
+  return (
+    <Button variant="ghost" title="Customers" data-active={active} aria-current={active ? "page" : undefined} onClick={onGo} className="text-muted-foreground data-[active=true]:bg-accent data-[active=true]:text-foreground w-full justify-start gap-3 px-3 font-normal md:max-lg:justify-center group-data-[collapsed=true]/sidebar:justify-center">
+      <UsersIcon size={16} />
+      <span className="truncate md:max-lg:hidden group-data-[collapsed=true]/sidebar:hidden">
+        Customers
+      </span>
+    </Button>
   )
 }
 "
@@ -256,6 +438,21 @@ export default function Page() {
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       <p className="text-sm">hi</p>
     </main>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > progress 1`] = `
+"import { Progress } from "@/components/ui/progress"
+
+export interface ProgressViewProps {
+  share?: any
+}
+
+export default function ProgressView({ share }: ProgressViewProps) {
+  return (
+    <Progress value={share} className="min-w-20" />
   )
 }
 "
@@ -279,9 +476,55 @@ exports[`compiler snapshots > section 1`] = `
 export default function Section() {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold tracking-tight">Billing</h2>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-xl font-semibold tracking-tight">Billing</h2>
+      </div>
       <p className="text-sm">hi</p>
     </section>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > select 1`] = `
+"import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
+
+export interface SelectViewProps {
+  status?: any
+  statuses?: any
+  onStatus?: any
+}
+
+export default function SelectView({ status, statuses, onStatus }: SelectViewProps) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid gap-2">
+        <Label htmlFor="status">Status</Label>
+        <Select value={status} onValueChange={onStatus}>
+          <SelectTrigger id="status" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {statuses?.map((opt: any, i: number) => (
+              <SelectItem key={i} value={opt?.value ?? opt}>{opt?.label ?? opt}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="schedule">Schedule</Label>
+        <Select>
+          <SelectTrigger id="schedule" className="w-full">
+            <SelectValue placeholder="Pick one" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Daily">Daily</SelectItem>
+            <SelectItem value="Weekly">Weekly</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   )
 }
 "
@@ -307,11 +550,139 @@ export default function Series() {
     <ChartContainer config={{ s1: { label: "Rain", color: "var(--chart-1)" } }} className="aspect-auto w-full h-[200px]">
       <AreaChart data={[{ x: "1", s1: 0 }, { x: "2", s1: 0.1 }, { x: "3", s1: 0.4 }]}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} />
+        <XAxis dataKey="x" tickLine={false} axisLine={false} tickMargin={8} minTickGap={24} />
         <YAxis tickLine={false} axisLine={false} />
         <Area dataKey="s1" type="natural" fill="var(--color-s1)" fillOpacity={0.4} stroke="var(--color-s1)" />
       </AreaChart>
     </ChartContainer>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > sheet 1`] = `
+"import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+
+export interface SheetViewProps {
+  open?: any
+  onOpen?: any
+}
+
+export default function SheetView({ open, onOpen }: SheetViewProps) {
+  return (
+    <Sheet open={open} onOpenChange={onOpen}>
+      <SheetContent className="w-full gap-0 overflow-y-auto sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Transaction</SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col gap-4 px-4 pb-4">
+          <p className="text-sm">details</p>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > shell 1`] = `
+"
+export interface ShellProps {
+  content?: any
+}
+
+export default function Shell({ content }: ShellProps) {
+  return (
+    <div className="flex min-h-svh w-full">
+      <div className="flex flex-col gap-4 flex-1 min-w-0">{content}</div>
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > sidebar 1`] = `
+"import { Button } from "@/components/ui/button"
+import { LayoutDashboardIcon } from "lucide-react"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
+
+export interface SidebarProps {
+  collapsed?: any
+  open?: any
+  onOpen?: any
+  go?: any
+}
+
+export default function Sidebar({ collapsed, open, onOpen, go }: SidebarProps) {
+  return (
+    <>
+      <aside data-collapsed={collapsed} className="group/sidebar bg-muted/40 sticky top-0 hidden h-svh w-16 shrink-0 flex-col gap-1 border-r p-2 transition-[width] md:flex lg:w-60 lg:data-[collapsed=true]:w-16">
+        <Button variant="ghost" title="Overview" data-active={true} aria-current={true ? "page" : undefined} onClick={go?.overview} className="text-muted-foreground data-[active=true]:bg-accent data-[active=true]:text-foreground w-full justify-start gap-3 px-3 font-normal md:max-lg:justify-center group-data-[collapsed=true]/sidebar:justify-center">
+          <LayoutDashboardIcon size={16} />
+          <span className="truncate md:max-lg:hidden group-data-[collapsed=true]/sidebar:hidden">
+            Overview
+          </span>
+        </Button>
+        <div className="flex-1" />
+        <p className="text-sm md:max-lg:hidden group-data-[collapsed=true]/sidebar:hidden">v1</p>
+      </aside>
+      <Sheet open={open} onOpenChange={onOpen}>
+        <SheetContent side="left" className="flex w-64 flex-col gap-1 p-2 pt-10">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <Button variant="ghost" title="Overview" data-active={true} aria-current={true ? "page" : undefined} onClick={go?.overview} className="text-muted-foreground data-[active=true]:bg-accent data-[active=true]:text-foreground w-full justify-start gap-3 px-3 font-normal md:max-lg:justify-center group-data-[collapsed=true]/sidebar:justify-center">
+            <LayoutDashboardIcon size={16} />
+            <span className="truncate md:max-lg:hidden group-data-[collapsed=true]/sidebar:hidden">
+              Overview
+            </span>
+          </Button>
+          <div className="flex-1" />
+          <p className="text-sm md:max-lg:hidden group-data-[collapsed=true]/sidebar:hidden">v1</p>
+        </SheetContent>
+      </Sheet>
+    </>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > skeleton 1`] = `
+"import { Skeleton } from "@/components/ui/skeleton"
+
+export default function SkeletonView() {
+  return (
+    <div className="flex flex-col gap-2">
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > slot 1`] = `
+"
+export interface SlotProps {
+  content?: any
+}
+
+export default function Slot({ content }: SlotProps) {
+  return (
+    <div className="flex flex-col gap-4">{content}</div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > spacer 1`] = `
+"
+export default function Spacer() {
+  return (
+    <div className="flex flex-row gap-4 items-center">
+      <p className="text-sm">left</p>
+      <div className="flex-1" />
+      <p className="text-sm">right</p>
+    </div>
   )
 }
 "
@@ -382,6 +753,55 @@ export default function Stat({ stats }: StatProps) {
 "
 `;
 
+exports[`compiler snapshots > switch 1`] = `
+"import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+
+export interface SwitchViewProps {
+  on?: any
+  onToggle?: any
+}
+
+export default function SwitchView({ on, onToggle }: SwitchViewProps) {
+  return (
+    <Label className="flex items-center justify-between gap-4">
+      <span className="flex flex-col gap-1">
+        <span>Palm</span>
+        <span className="text-muted-foreground text-sm font-normal">Accept palm payments</span>
+      </span>
+      <Switch checked={on} onCheckedChange={onToggle} />
+    </Label>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > tab 1`] = `
+"import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ChartLineIcon } from "lucide-react"
+
+export default function Tab() {
+  return (
+    <Tabs defaultValue="Overview">
+      <TabsList>
+        <TabsTrigger value="Overview">
+          <ChartLineIcon size={16} />
+          Overview
+        </TabsTrigger>
+        <TabsTrigger value="notes">Notes</TabsTrigger>
+      </TabsList>
+      <TabsContent value="Overview" className="flex flex-col gap-4 pt-2">
+        <p className="text-sm">a</p>
+      </TabsContent>
+      <TabsContent value="notes" className="flex flex-col gap-4 pt-2">
+        <p className="text-sm">b</p>
+      </TabsContent>
+    </Tabs>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > table 1`] = `
 "import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
@@ -414,6 +834,56 @@ export default function TableView({ orders }: TableViewProps) {
 "
 `;
 
+exports[`compiler snapshots > tabs 1`] = `
+"import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+export interface TabsViewProps {
+  range?: any
+  onRange?: any
+}
+
+export default function TabsView({ range, onRange }: TabsViewProps) {
+  return (
+    <Tabs value={range} onValueChange={onRange}>
+      <TabsList>
+        <TabsTrigger value="7d">7d</TabsTrigger>
+        <TabsTrigger value="30d">30d</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > td 1`] = `
+"import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+export interface TdProps {
+  r?: any
+}
+
+export default function Td({ r }: TdProps) {
+  return (
+    <Table>
+      <TableBody>
+        <TableRow>
+          <TableCell>
+            <div className="flex flex-row gap-2 items-center">
+              <Avatar className="size-8">
+                <AvatarFallback className="text-xs">{r?.initials}</AvatarFallback>
+              </Avatar>
+              <p className="text-sm">{r?.name}</p>
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  )
+}
+"
+`;
+
 exports[`compiler snapshots > text 1`] = `
 "
 export interface TextProps {
@@ -423,6 +893,166 @@ export interface TextProps {
 export default function Text({ user }: TextProps) {
   return (
     <p className="text-lg text-muted-foreground">{user?.name}</p>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > textarea 1`] = `
+"import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+
+export interface TextareaViewProps {
+  note?: any
+  onNote?: any
+  err?: any
+}
+
+export default function TextareaView({ note, onNote, err }: TextareaViewProps) {
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor="note">Note</Label>
+      <Textarea id="note" placeholder="Add a note" rows={3} value={note} onChange={(e) => onNote?.(e.target.value)} aria-invalid={!!err} />
+      {err ? (
+        <p className="text-destructive text-sm">{err}</p>
+      ) : null}
+    </div>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > th 1`] = `
+"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react"
+
+export interface ThProps {
+  sort?: any
+  onSort?: any
+}
+
+export default function Th({ sort, onSort }: ThProps) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-right" aria-sort={(({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort] ?? "none")}>
+            <Button variant="ghost" size="sm" className="-mx-3 h-8" onClick={onSort}>
+              Amount
+              {sort === "asc" ? (
+                <ArrowUpIcon size={16} className="text-muted-foreground" />
+              ) : (
+                <>
+                  {sort === "desc" ? (
+                    <ArrowDownIcon size={16} className="text-muted-foreground" />
+                  ) : (
+                    <ArrowUpDownIcon size={16} className="text-muted-foreground" />
+                  )}
+                </>
+              )}
+            </Button>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody />
+    </Table>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > thead 1`] = `
+"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react"
+
+export interface TheadProps {
+  rows?: any
+  sort?: any
+  onSortAmount?: any
+}
+
+export default function Thead({ rows, sort, onSortAmount }: TheadProps) {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>ID</TableHead>
+          <TableHead className="text-right" aria-sort={(({"asc":"ascending","desc":"descending"} as Record<string, string>)[sort?.amount] ?? "none")}>
+            <Button variant="ghost" size="sm" className="-mx-3 h-8" onClick={onSortAmount}>
+              Amount
+              {sort?.amount === "asc" ? (
+                <ArrowUpIcon size={16} className="text-muted-foreground" />
+              ) : (
+                <>
+                  {sort?.amount === "desc" ? (
+                    <ArrowDownIcon size={16} className="text-muted-foreground" />
+                  ) : (
+                    <ArrowUpDownIcon size={16} className="text-muted-foreground" />
+                  )}
+                </>
+              )}
+            </Button>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows?.map((r: any, i: number) => (
+          <TableRow key={i} className="cursor-pointer" role="button" tabIndex={0} onClick={r?.onOpen} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); r?.onOpen?.(e) } }}>
+            <TableCell>{r?.id}</TableCell>
+            <TableCell className="text-right">{r?.amount}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > tr 1`] = `
+"import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+export interface TrProps {
+  rows?: any
+}
+
+export default function Tr({ rows }: TrProps) {
+  return (
+    <Table>
+      <TableBody>
+        {rows?.map((r: any, i: number) => (
+          <TableRow key={i} className="cursor-pointer" role="button" tabIndex={0} onClick={r?.onOpen} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); r?.onOpen?.(e) } }}>
+            <TableCell>{r?.id}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+"
+`;
+
+exports[`compiler snapshots > trigger 1`] = `
+"import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+
+export default function Trigger() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild={true}>
+        <Button className="w-fit" variant="destructive">Delete</Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Confirm</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-4">
+          <p className="text-sm">Sure?</p>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 "

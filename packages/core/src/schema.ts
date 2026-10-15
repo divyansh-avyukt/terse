@@ -5,15 +5,18 @@
 
 /** 'text': literal or @ref. 'ref': @ref only. 'handler': @ref to a function prop. 'bool': true/false or @ref.
  *  'literal': any literal, not a @ref. 'list': comma-separated literal (a,b,c), ranges allowed (Mon..Fri, 1..5).
- *  'numbers': a list of numbers. string[]: literal from a fixed set (style tokens). */
-export type PropType = 'text' | 'ref' | 'handler' | 'bool' | 'literal' | 'list' | 'numbers' | readonly string[]
+ *  'items': a 'list' literal or a @ref to an array. 'numbers': a list of numbers, or a @ref to one.
+ *  string[]: literal from a fixed set (style tokens). */
+export type PropType = 'text' | 'ref' | 'handler' | 'bool' | 'literal' | 'list' | 'items' | 'numbers' | readonly string[]
 
 export interface ComponentSpec {
   args: readonly string[] // positional args fill these props, in order
   props: Record<string, PropType>
   required?: readonly string[]
+  requiredWithoutChildren?: readonly string[] // required only when the node has no children
   children?: boolean | string // a string: only that component, as direct children
-  parent?: string // must sit inside this component (through each/if)
+  parent?: string | readonly string[] // must sit inside (one of) these components (through each/if)
+  dynamic?: readonly string[] // token props that may also be a @ref, resolved at runtime from the same fixed set
 }
 
 const SPACE = ['none', 'xs', 'sm', 'md', 'lg', 'xl']
@@ -25,30 +28,47 @@ export const TOKENS = {
   align: ['start', 'center', 'end', 'stretch'],
   justify: ['start', 'center', 'end', 'between', 'around'],
   // 'a,b': a columns below md, b from md up
-  cols: ['1', '2', '3', '4', '5', '6', '12', '1,2', '1,3', '1,4', '2,3', '2,4', '2,6', '3,6'],
-  tone: ['default', 'muted', 'primary', 'destructive'],
+  // 'a,b,c': a below md, b from md, c from lg (md with a sidebar is often too narrow for side-by-side cards)
+  cols: ['1', '2', '3', '4', '5', '6', '12', '1,2', '1,3', '1,4', '2,3', '2,4', '2,6', '3,6', '1,1,2', '1,1,3', '1,2,3', '1,2,4', '2,2,4'],
+  tone: ['default', 'muted', 'primary', 'success', 'warning', 'destructive'],
   size: ['sm', 'md', 'lg'],
   wrap: ['true', 'false'],
+  grow: ['true', 'false'],
+  span: ['1', '2', '3'], // grid columns taken from lg up
+  // mobile: below md. desktop: md and up. collapsed: while the enclosing sidebar shows icons only.
+  hide: ['mobile', 'desktop', 'collapsed'],
 } as const satisfies Record<string, readonly string[]>
 
 export type StyleToken = keyof typeof TOKENS
-const { gap, pad, align, justify, cols, tone, size, wrap } = TOKENS
+const { gap, pad, align, justify, cols, tone, size, wrap, grow, span } = TOKENS
+
+/** Props every built-in component accepts. */
+export const UNIVERSAL_PROPS: Record<string, PropType> = { hide: TOKENS.hide }
+
+const field = { label: 'text', placeholder: 'text', value: 'text', name: 'text', on: 'handler', disabled: 'bool', error: 'text' } as const
 
 export const COMPONENTS: Record<string, ComponentSpec> = {
   page: { args: ['title'], props: { title: 'text', gap, pad, size }, children: true },
-  section: { args: ['title'], props: { title: 'text', gap, pad }, children: true },
-  row: { args: [], props: { gap, pad, align, justify, wrap }, children: true },
-  col: { args: [], props: { gap, pad, align, justify, size }, children: true }, // size: max width
+  section: { args: ['title'], props: { title: 'text', description: 'text', gap, pad }, children: true },
+  row: { args: [], props: { gap, pad, align, justify, wrap, grow }, children: true },
+  col: { args: [], props: { gap, pad, align, justify, grow, span, size }, children: true }, // size: max width
   grid: { args: [], props: { cols, gap, pad }, children: true },
-  card: { args: ['title'], props: { title: 'text', description: 'text', gap, pad, tone: ['default', 'transparent'] }, children: true },
+  spacer: { args: [], props: {} },
+  card: {
+    args: ['title'],
+    props: { title: 'text', description: 'text', gap, pad, tone: ['default', 'transparent', 'destructive'], span, on: 'handler' },
+    children: true,
+  },
   heading: { args: ['text'], props: { text: 'text', level: ['1', '2', '3', '4'], size: [...size, 'xl'], tone, align }, required: ['text'] },
-  text: { args: ['text'], props: { text: 'text', size: [...size, 'xl'], tone, align }, required: ['text'] },
+  text: { args: ['text'], props: { text: 'text', size: [...size, 'xl'], tone, align }, required: ['text'], dynamic: ['tone'] },
   button: {
     args: ['label'],
     props: {
       label: 'text',
       variant: ['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'],
-      size,
+      size: [...size, 'icon'],
+      icon: 'literal',
+      count: 'text',
       on: 'handler',
       href: 'text', // renders a link styled as a button
       disabled: 'bool',
@@ -58,31 +78,38 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
   },
   input: {
     args: ['label'],
-    props: {
-      label: 'text',
-      placeholder: 'text',
-      type: ['text', 'email', 'password', 'number', 'search', 'tel', 'url', 'date'],
-      value: 'text',
-      name: 'text',
-      on: 'handler',
-      disabled: 'bool',
-    },
+    props: { ...field, type: ['text', 'email', 'password', 'number', 'search', 'tel', 'url', 'date'], icon: 'literal' },
   },
-  badge: { args: ['text'], props: { text: 'text', tone }, required: ['text'] },
+  textarea: { args: ['label'], props: { ...field, rows: 'literal' } },
+  select: { args: ['label'], props: { ...field, options: 'items' }, required: ['options'] },
+  switch: { args: ['label'], props: { label: 'text', description: 'text', checked: 'bool', on: 'handler', disabled: 'bool' } },
+  checkbox: { args: ['label'], props: { label: 'text', description: 'text', checked: 'bool', on: 'handler', disabled: 'bool' } },
+  tabs: { args: [], props: { value: 'text', on: 'handler' }, children: 'tab' },
+  tab: { args: ['label'], props: { label: 'text', value: 'literal', icon: 'literal' }, required: ['label'], children: true, parent: 'tabs' },
+  badge: { args: ['text'], props: { text: 'text', tone }, required: ['text'], dynamic: ['tone'] },
+  avatar: { args: ['src'], props: { src: 'text', fallback: 'text', size }, required: ['fallback'] },
+  progress: { args: ['value'], props: { value: 'text' }, required: ['value'] },
+  skeleton: { args: [], props: { lines: 'literal', size } },
   stat: {
     args: ['label', 'value'],
     props: { label: 'text', value: 'text', delta: 'text', tone, icon: 'literal', align },
     required: ['label', 'value'],
+    dynamic: ['tone'],
   },
-  icon: { args: ['name'], props: { name: 'literal', size }, required: ['name'] },
-  callout: { args: ['title', 'description'], props: { title: 'text', description: 'text', icon: 'literal' }, required: ['title'] },
+  icon: { args: ['name'], props: { name: 'literal', size, tone }, required: ['name'] },
+  callout: {
+    args: ['title', 'description'],
+    props: { title: 'text', description: 'text', icon: 'literal', tone: ['default', 'destructive'] },
+    required: ['title'],
+    children: true,
+  },
   list: { args: [], props: {}, children: true },
   item: { args: ['label', 'value'], props: { label: 'text', value: 'text' }, required: ['label'], parent: 'list' },
   chart: {
     args: ['type'],
     props: {
-      type: ['bar', 'area'],
-      x: 'list',
+      type: ['bar', 'area', 'line', 'donut'],
+      x: 'items',
       xlabel: 'text',
       ylabel: 'text',
       size,
@@ -94,7 +121,11 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
     children: 'series',
   },
   series: { args: ['label', 'values'], props: { label: 'text', values: 'numbers' }, required: ['label', 'values'], parent: 'chart' },
-  table: { args: ['rows'], props: { rows: 'ref', cols: 'list', headers: 'list' }, required: ['rows', 'cols'] },
+  table: { args: ['rows'], props: { rows: 'ref', cols: 'list', headers: 'list' }, requiredWithoutChildren: ['rows', 'cols'], children: true },
+  thead: { args: [], props: {}, children: 'th', parent: 'table' },
+  th: { args: ['label'], props: { label: 'text', align, sort: 'text', on: 'handler' }, parent: 'thead' },
+  tr: { args: [], props: { on: 'handler' }, children: 'td', parent: 'table' },
+  td: { args: ['text'], props: { text: 'text', align }, children: true, parent: 'tr' },
   image: { args: ['src'], props: { src: 'text', alt: 'text', size }, required: ['src'] },
   link: { args: ['label', 'href'], props: { label: 'text', href: 'text', tone }, required: ['label', 'href'] },
   separator: { args: [], props: {} },
@@ -105,6 +136,18 @@ export const COMPONENTS: Record<string, ComponentSpec> = {
     children: true,
   },
   code: { args: ['source'], props: { source: 'text', lang: 'literal', title: 'text' }, required: ['source'] },
+  slot: { args: ['content'], props: { content: 'ref' }, required: ['content'] },
+  // App chrome
+  shell: { args: [], props: {}, children: true },
+  sidebar: { args: [], props: { collapsed: 'bool', open: 'bool', on: 'handler' }, children: true },
+  navitem: { args: ['label'], props: { label: 'text', icon: 'literal', active: 'bool', on: 'handler' }, required: ['label'] },
+  bar: { args: [], props: { side: ['top', 'bottom'], gap, justify }, children: true },
+  // Overlays: an optional `trigger` child opens them; the other children are the content.
+  menu: { args: [], props: { label: 'text', align: ['start', 'center', 'end'] }, children: true },
+  menuitem: { args: ['label'], props: { label: 'text', icon: 'literal', on: 'handler', tone: ['default', 'destructive'] }, required: ['label'], parent: 'menu' },
+  dialog: { args: ['title'], props: { title: 'text', description: 'text', open: 'bool', on: 'handler' }, required: ['title'], children: true },
+  sheet: { args: ['title'], props: { title: 'text', description: 'text', open: 'bool', on: 'handler' }, required: ['title'], children: true },
+  trigger: { args: [], props: {}, children: true, parent: ['menu', 'dialog', 'sheet'] },
 }
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

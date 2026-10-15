@@ -1,0 +1,6 @@
+# A row of KPI stats. Each stat: { label, value, delta, tone }.
+props stats
+
+grid cols=2,4
+  each @stats as s
+    stat @s.label @s.value delta=@s.delta tone=@s.tone

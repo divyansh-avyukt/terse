@@ -1,0 +1,34 @@
+# Side sheet with one transaction's details, its event timeline and actions.
+use StatusBadge from "@/views/cafe/components/StatusBadge.terse"
+props tx, open, onOpenChange, onRefund, onDownload
+
+sheet "Transaction details" description=@tx.id open=@open on=@onOpenChange
+  if @tx
+    row justify=between
+      row gap=sm
+        avatar fallback=@tx.initials size=md
+        col gap=none
+          text @tx.customer size=md
+          text @tx.email tone=muted
+      StatusBadge status=@tx.status tone=@tx.tone
+    text @tx.amount size=xl
+    list
+      item "Date" @tx.date
+      item "Method" @tx.method
+      item "Store" @tx.store
+    heading "Items" level=4
+    list
+      each @tx.lines as line
+        item @line.label @line.total
+    heading "Timeline" level=4
+    col gap=sm
+      each @tx.events as ev
+        row gap=sm align=start
+          icon circle-dot size=sm tone=muted
+          col gap=none
+            text @ev.label
+            text @ev.time tone=muted
+    separator
+    row gap=sm wrap=true
+      button "Refund" variant=outline icon=undo-2 on=@onRefund disabled=@tx.cannotRefund
+      button "Download receipt" icon=download on=@onDownload
