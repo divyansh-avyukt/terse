@@ -1,5 +1,9 @@
 # Using Terse in a new project
 
+**Fastest:** `npm create terse-app@latest my-app` sets up everything below (Vite, Tailwind, shadcn/ui,
+Terse, an example view and agent instructions). The rest of this guide is the manual version, for
+adding Terse to an existing app.
+
 This sets up a Vite + React + TypeScript app with shadcn/ui, Tailwind v4 and Terse. Every step was
 run end to end in a fresh folder outside this repo.
 

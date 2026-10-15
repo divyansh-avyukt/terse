@@ -1,8 +1,11 @@
 // Copy that isn't measured: install snippets, the agent prompt and CLAUDE.md excerpt.
 export const GITHUB = 'https://github.com/divyansh-avyukt/terse'
 
-export const INSTALL = `pnpm add -D @terseui/vite-plugin \\
-  @terseui/adapter-shadcn @terseui/style-tailwind`
+export const INSTALL = `# New app, everything wired up:
+npm create terse-app@latest my-app
+
+# Or add Terse to an existing Vite + shadcn/ui app:
+pnpm add -D @terseui/vite-plugin @terseui/adapter-shadcn @terseui/style-tailwind`
 
 export const VITE_CONFIG = `import terse from '@terseui/vite-plugin'
 import { shadcn } from '@terseui/adapter-shadcn'

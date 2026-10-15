@@ -1,0 +1,20 @@
+# A Terse view: presentation only. Data and handlers come from src/pages/HomePage.tsx.
+props greeting, name, onName, stats, orders, onRefresh
+
+page "Your Terse app"
+  text "Edit `src/views/pages/Home.terse` and save: the page hot-reloads. Read the language in [SPEC.md](https://terse-ui.dev/llms.txt)." tone=muted
+  grid cols=1,3
+    stat "Revenue" @stats.revenue delta="+12% this month" icon=dollar-sign
+    stat "Orders" @stats.orders icon=shopping-cart
+    stat "Customers" @stats.customers icon=users
+  grid cols=1,2
+    card "Weekly orders"
+      chart bar x=Mon..Sun tooltip=true
+        series "Orders" 12,18,15,22,30,26,19
+    card "Say hello" description="State lives in TSX; the view just renders it."
+      input "Your name" value=@name on=@onName placeholder="Ada"
+      text @greeting
+  card "Recent orders"
+    table @orders cols=id,customer,status,total
+  row justify=end
+    button "Refresh" variant=outline on=@onRefresh
