@@ -7,6 +7,7 @@ import OverviewPage from './OverviewPage'
 import TransactionsPage from './TransactionsPage'
 import CustomersPage from './CustomersPage'
 import CustomerDetailPage from './CustomerDetailPage'
+import MenuPage from './MenuPage'
 
 const TITLES: Record<Route['name'], string> = {
   overview: 'Overview',
@@ -57,6 +58,8 @@ export default function AppShell() {
         return <CustomersPage />
       case 'customer':
         return <CustomerDetailPage key={route.id} id={route.id} />
+      case 'menu':
+        return <MenuPage />
       default:
         return <OverviewPage store={store} />
     }

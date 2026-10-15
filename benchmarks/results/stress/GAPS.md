@@ -135,3 +135,29 @@ paid for this page.
 
 - None in `.terse`. One playwright script bug: tab triggers have role `tab`, so clicking "Transactions"
   as a `button` hit the sidebar's nav item instead.
+
+## Phase 4: Menu
+
+**No new components or props.** Category tabs are `tabs` without panels; item cards compose `card`,
+`heading`, `text`, `badge`, `switch`; the "Add item" form is a `dialog` with a `trigger` and inline errors
+via the `error=` prop on `input` / `select` / `textarea` (all added in Phase 1). The only fix was outside
+Terse: the playground's `input.tsx` predated shadcn v4's `aria-invalid:` styles, so invalid text inputs
+had no red border while the select did.
+
+### Pain points
+
+- **The dialog's form sits in the middle of the page's tree.** Because the trigger has to be a child of
+  `dialog`, the dialog (form fields and all) is nested inside the toolbar `row`, 3 levels in, between the
+  category tabs and the item grid. Proposed: allow `trigger for=addItem` elsewhere, or let a top-level
+  `dialog id=addItem` be opened by `button opens=addItem`.
+- **Eleven props for one form.** `form`, `errors` and one handler per field (`onName`, `onPrice`, …).
+  Proposed: `form @form on=@onField` on a container component that binds every child field by `name=`,
+  calling `onField(name, value)`, so the view shrinks to field lines and the container keeps one handler.
+- **Per-item handlers again.** Each card's availability `switch on=@m.onToggle` needs a closure built per
+  item in TSX.
+- **A card can't have a full-bleed image header.** `image` only has square sizes (`sm md lg`); a menu card
+  photo across the top isn't expressible, so new items show a 48px thumbnail beside the name.
+
+### Compile errors hit
+
+- None in `.terse`. One TSX bug (`m.soldTodayCount()`, caught by `tsc`).
