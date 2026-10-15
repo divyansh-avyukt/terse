@@ -161,3 +161,37 @@ had no red border while the select did.
 ### Compile errors hit
 
 - None in `.terse`. One TSX bug (`m.soldTodayCount()`, caught by `tsc`).
+
+## Phase 5: Settings
+
+**No new components or props.** Sections are `section title description` + `card`; payment methods are
+`switch description=`; notifications are a column of `checkbox description=`; the team table puts a `select`
+and an icon `button` inside `td`; the invite and confirm flows are `dialog`s with triggers; the danger zone
+is `card tone=destructive`; the sticky save bar is `if @dirty` + `bar side=bottom`. All of it was in
+place after Phase 1.
+
+Bugs found by looking at the page, not by tests:
+- The playground's new `checkbox.tsx` rendered checked boxes empty in dark mode (`dark:bg-input/30`
+  outranked `data-[state=checked]:bg-primary`); fixed with `dark:data-[state=checked]:bg-primary` as in
+  current shadcn.
+- The owner's role `select` was blank because its value wasn't in the options list (TSX data bug).
+
+### Pain points
+
+- **Handler argument shapes differ by component, invisibly.** `dialog on=` gets a boolean, `button on=` gets
+  the click event. Reusing `@onInviteOpen` for the Cancel button kept the dialog open (the event is truthy),
+  so each dialog needs a separate `onXCancel`. The view can't see the difference. Proposed: document
+  argument types per handler in components.md, and/or a `button close=true` inside `dialog` that closes
+  its nearest overlay.
+- **Accessible names need interpolation.** Four identical "Remove" icon buttons are ambiguous to screen
+  readers; the fix was a per-row `removeLabel` string built in TSX. Proposed: simple interpolation in quoted
+  strings (`"Remove {m.name}"`), still no expressions.
+- **Field wiring by convention.** `value=@form.x on=@set.x` is repeated 14 times; `set` is a map of setters
+  built with `Object.fromEntries` in TSX. Same proposal as Phase 4: a `form` container binding fields by
+  `name=`.
+- **The confirm prompt needs two strings.** "Type “Indiranagar” to confirm." is passed in whole because the
+  store name can't be placed inside literal text (interpolation again).
+
+### Compile errors hit
+
+- None in `.terse`.

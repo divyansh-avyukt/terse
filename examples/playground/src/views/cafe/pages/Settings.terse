@@ -1,0 +1,81 @@
+# Store settings. `set.x` is the change handler for field x; `form` holds every field's value.
+props form, set, errors, schedules
+props team, roles, inviteRoles, inviteOpen, onInviteOpen, onInviteCancel, invite, setInvite, inviteErrors, onInvite
+props storeName, closeOpen, onCloseOpen, onCloseCancel, confirmText, onConfirmText, cannotClose, onCloseStore, closed
+props dirty, barMessage, cannotSave, onDiscard, onSave
+
+page gap=lg pad=md size=md
+  section "Store profile" description="How this store appears on receipts and in the customer app."
+    card
+      grid cols=1,2 gap=md
+        input "Store name" name=store-name value=@form.name on=@set.name error=@errors.name
+        input "Contact email" name=store-email type=email value=@form.email on=@set.email error=@errors.email
+        input "Phone" name=store-phone type=tel value=@form.phone on=@set.phone
+        input "GSTIN" name=store-gstin value=@form.gstin on=@set.gstin error=@errors.gstin
+      textarea "Address" name=store-address rows=2 value=@form.address on=@set.address
+
+  section "Payments" description="Methods offered at the counter, and when money reaches your bank."
+    card gap=lg
+      col gap=md
+        switch "Palm" description="Pay by scanning a palm at the reader." checked=@form.palm on=@set.palm
+        switch "UPI" description="Dynamic QR on the counter display." checked=@form.upi on=@set.upi
+        switch "Card" description="Tap, insert or swipe on the terminal." checked=@form.card on=@set.card
+        switch "Cash" description="Recorded manually by staff." checked=@form.cash on=@set.cash
+      separator
+      select "Settlement schedule" name=settlement options=@schedules value=@form.settlement on=@set.settlement
+
+  section "Notifications" description="Emails sent to the store's contact address."
+    card
+      checkbox "Daily summary" description="Sales, refunds and top items, every night at 11pm." checked=@form.dailySummary on=@set.dailySummary
+      checkbox "Failed payments" description="Right away, when three payments fail in an hour." checked=@form.failedAlerts on=@set.failedAlerts
+      checkbox "Refund requests" description="When staff start a refund over ₹1,000." checked=@form.refundAlerts on=@set.refundAlerts
+      checkbox "Weekly report" description="A PDF every Monday morning." checked=@form.weeklyReport on=@set.weeklyReport
+
+  section "Team" description="People who can sign in to this store."
+    card
+      table
+        thead
+          th "Member"
+          th "Role"
+          th "Remove" align=end
+        each @team as m
+          tr
+            td
+              row gap=sm
+                avatar fallback=@m.initials hide=mobile
+                col gap=none
+                  text @m.name
+                  text @m.email tone=muted hide=mobile
+            td
+              select options=@roles value=@m.role on=@m.onRole disabled=@m.isOwner
+            td align=end
+              button @m.removeLabel size=icon variant=ghost icon=trash-2 on=@m.onRemove disabled=@m.isOwner
+      dialog "Invite a team member" description="They'll get an email with a sign-in link." open=@inviteOpen on=@onInviteOpen
+        trigger
+          button "Invite member" variant=outline icon=user-plus
+        input "Email" name=invite-email type=email placeholder="name@example.com" value=@invite.email on=@setInvite.email error=@inviteErrors.email
+        select "Role" name=invite-role options=@inviteRoles value=@invite.role on=@setInvite.role
+        row justify=end gap=sm
+          button "Cancel" variant=outline on=@onInviteCancel
+          button "Send invite" icon=send on=@onInvite
+
+  section "Danger zone"
+    card "Close this store" description="Stops taking payments and hides the store from the app. Past transactions stay in your reports." tone=destructive
+      if @closed
+        callout "Store closed" "Payments are off. Contact support within 30 days to reopen." icon=circle-alert tone=destructive
+      else
+        dialog "Close this store?" description="This can't be undone from the dashboard." open=@closeOpen on=@onCloseOpen
+          trigger
+            button "Close store" variant=destructive icon=store
+          text @storeName
+          input "Type the store name to confirm" name=confirm-close value=@confirmText on=@onConfirmText
+          row justify=end gap=sm
+            button "Cancel" variant=outline on=@onCloseCancel
+            button "Close store" variant=destructive on=@onCloseStore disabled=@cannotClose
+
+  if @dirty
+    bar side=bottom justify=between
+      text @barMessage tone=muted
+      row gap=sm
+        button "Discard" variant=ghost on=@onDiscard
+        button "Save changes" on=@onSave disabled=@cannotSave
