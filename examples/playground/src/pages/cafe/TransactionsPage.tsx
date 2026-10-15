@@ -2,19 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { stores, transactions, type Status, type Transaction } from '@/app/data'
 import { customerOf, dateTime, longDate, menuItem, money, STATUS_TONE, txRow } from '@/app/format'
 import { navigate } from '@/app/router'
+import { useTxSort } from '@/app/sort'
 import Transactions from '@/views/cafe/pages/Transactions.terse'
 
 const PAGE_SIZE = 20
-type SortKey = 'id' | 'time' | 'customer' | 'amount'
 type Filters = { search: string; status: string; method: string; from: string; to: string }
 const NO_FILTERS: Filters = { search: '', status: 'All', method: 'All', from: '', to: '' }
-
-const SORTERS: Record<SortKey, (a: Transaction, b: Transaction) => number> = {
-  id: (a, b) => a.id.localeCompare(b.id),
-  time: (a, b) => a.time.localeCompare(b.time),
-  customer: (a, b) => customerOf(a).name.localeCompare(customerOf(b).name),
-  amount: (a, b) => a.amount - b.amount,
-}
 
 /** Fake fetch. `?state=loading` never resolves and `?state=error` fails the first load, for screenshots. */
 function useTransactions() {
@@ -59,8 +52,8 @@ export default function TransactionsPage(props: { store: string; search: string;
   const { store, search, onSearch, openTx } = props
   const { loading, error, data, retry } = useTransactions()
   const [filters, setFilters] = useState<Omit<Filters, 'search'>>(NO_FILTERS)
-  const [sort, setSort] = useState<{ key: SortKey; dir: 'asc' | 'desc' }>({ key: 'time', dir: 'desc' })
   const [page, setPage] = useState(0)
+  const { sort, sortBy, apply } = useTxSort(() => setPage(0))
   const [refunded, setRefunded] = useState<Set<string>>(new Set())
   const statusOf = useCallback((t: Transaction): Status => (refunded.has(t.id) ? 'Refunded' : t.status), [refunded])
 
@@ -83,19 +76,14 @@ export default function TransactionsPage(props: { store: string; search: string;
       if (filters.to && day > filters.to) return false
       return true
     })
-    const dir = sort.dir === 'asc' ? 1 : -1
-    return rows.sort((a, b) => SORTERS[sort.key](a, b) * dir)
-  }, [data, store, search, filters, sort, statusOf])
+    return apply(rows)
+  }, [data, store, search, filters, apply, statusOf])
 
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const current = Math.min(page, pages - 1)
   const slice = filtered.slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE)
   const selected = openTx ? transactions.find((t) => t.id === openTx) : undefined
   const open = (id?: string) => navigate(id ? `/transactions?tx=${id}` : '/transactions')
-
-  const sortBy = Object.fromEntries(
-    (Object.keys(SORTERS) as SortKey[]).map((key) => [key, () => setSort((s) => ({ key, dir: s.key === key && s.dir === 'desc' ? 'asc' : 'desc' }))]),
-  )
 
   const download = (t: Transaction) => {
     const d = details(t, statusOf(t))
@@ -124,7 +112,7 @@ export default function TransactionsPage(props: { store: string; search: string;
       onRetry={retry}
       empty={!filtered.length}
       rows={slice.map((t) => ({ ...txRow(t, () => open(t.id)), status: statusOf(t), tone: STATUS_TONE[statusOf(t)] }))}
-      sort={{ [sort.key]: sort.dir }}
+      sort={sort}
       sortBy={sortBy}
       showing={`Showing ${current * PAGE_SIZE + 1}–${current * PAGE_SIZE + slice.length} of ${filtered.length}`}
       onPrev={() => setPage(current - 1)}

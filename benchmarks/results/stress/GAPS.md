@@ -81,7 +81,7 @@ the rows this page actually depends on, plus what only showed up once it rendere
 | 26 | Side sheet with details, a timeline and actions | `TransactionSheet.terse` | `sheet` (controlled `open`/`on`) | overlay |
 | 27 | Loading skeleton | `Transactions.terse` | `skeleton lines= size=` | state |
 | 28 | Error state with a Retry action inside the alert | `Transactions.terse` | `callout tone=destructive` + children as an action row | state |
-| 29 | Hide the ID / Time / Method / avatar columns on phones | `TransactionsTable.terse` | `hide` now merges into the root element's `className` instead of wrapping (a `<div>` inside `<tr>` is invalid DOM); the wrapper is kept only for roots with no DOM node (fragments, Radix `Select`/`Dialog`/…) | core |
+| 29 | Hide the ID / Time / Method / avatar columns on phones | `TransactionsTable.terse` | `hide` merges into the root element's `className` instead of wrapping (shipped in the Phase 1 commit, caught while designing this table) (a `<div>` inside `<tr>` is invalid DOM); the wrapper is kept only for roots with no DOM node (fragments, Radix `Select`/`Dialog`/…) | core |
 | 30 | Date range, status and method filters with labels | `Transactions.terse` | `input type=date` (existing), `select` | input |
 
 ### Pain points
@@ -108,3 +108,30 @@ the rows this page actually depends on, plus what only showed up once it rendere
   props rename when the store filter was added).
 - Not a Terse error, but found by screenshots: native date inputs showed black calendar icons in dark
   mode until `.dark { color-scheme: dark }` was added to `index.css`.
+
+## Phase 3: Customers
+
+**No new components or props.** The grid/list toggle is `tabs` without panels (+ `tab icon=`), the
+detail page's Overview / Transactions / Notes are `tabs` with panels, clickable customer cards use
+`card on=`, the visit chart is `chart bar` fed by a `@ref`, the Notes form is `textarea error=` +
+`button`, and the Transactions tab reuses `TransactionsTable.terse` unchanged. Phases 1–2 had already
+paid for this page.
+
+### Pain points
+
+- **Third enum-as-booleans workaround.** Grid vs list is driven by `isGrid={view === 'grid'}` passed next
+  to `view` itself, because `if` can't compare. Same for tier → badge tone (`TIER_TONE`). Proposed:
+  `if @view is grid` (literal-only right side, so it stays a simple check).
+- **Two renderings of one list.** The grid and the table iterate the same `@customers`, with the same
+  avatar/name/badge cells written twice. A local, parameterised fragment (a `def CustomerName c` block
+  in the same file) would remove it without a new file.
+- **Count charts get fractional ticks.** "Visits by weekday" shows 0.5, 1.5 on the y-axis. Proposed:
+  `chart … ticks=integer` (or infer it from integer literal data, impossible for `@ref` data).
+- **Shared-table plumbing.** Reusing `TransactionsTable` means every container repeats the `sort` / `sortBy`
+  props, now behind a `useTxSort()` hook. That's TSX-side and fine, but it shows that a reusable view's
+  contract is "whatever props it lists", with no types at the boundary (`props` compile to `any`).
+
+### Compile errors hit
+
+- None in `.terse`. One playwright script bug: tab triggers have role `tab`, so clicking "Transactions"
+  as a `button` hit the sidebar's nav item instead.

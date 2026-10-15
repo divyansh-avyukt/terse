@@ -1,5 +1,5 @@
 // Formatting and derivations shared by the containers. Views receive these finished strings.
-import { customers, menu, NOW, type Customer, type Status, type Transaction } from './data'
+import { customers, menu, NOW, transactions, type Customer, type Status, type Transaction } from './data'
 
 const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
 export const money = (n: number) => inr.format(n)
@@ -49,4 +49,14 @@ export function txRow(t: Transaction, onOpen: () => void) {
     tone: STATUS_TONE[t.status],
     onOpen,
   }
+}
+
+export const TIER_TONE: Record<Customer['tier'], string> = { VIP: 'primary', Regular: 'default', New: 'success' }
+
+/** A customer's paid visits (all stores), newest first, with totals. */
+export function customerSummary(c: Customer) {
+  const txs = transactions.filter((t) => t.customerId === c.id)
+  const paid = txs.filter((t) => t.status === 'Success')
+  const spent = paid.reduce((s, t) => s + t.amount, 0)
+  return { txs, paid, visits: paid.length, spent, last: txs[0]?.time }
 }

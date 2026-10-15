@@ -1,0 +1,54 @@
+use StatRow from "@/views/cafe/components/StatRow.terse"
+use TransactionsTable from "@/views/cafe/components/TransactionsTable.terse"
+use EmptyState from "@/views/cafe/components/EmptyState.terse"
+props customer, onBack, tab, onTab
+props stats, visits, favorites
+props rows, sort, sortBy
+props notes, draft, onDraft, noteError, onAddNote
+
+page gap=md pad=md
+  button "All customers" variant=ghost size=sm icon=arrow-left on=@onBack
+  if not @customer
+    card
+      EmptyState title="Customer not found" description="They may have been removed." action="Back to customers" onAction=@onBack
+  else
+    row gap=md
+      avatar fallback=@customer.initials size=lg
+      col gap=xs
+        heading @customer.name level=2
+        text @customer.joined tone=muted
+        row gap=xs wrap=true
+          badge @customer.tier tone=@customer.tierTone
+          if @customer.palmEnrolled
+            badge "Palm enrolled" tone=primary
+          badge @customer.phone tone=muted
+    tabs value=@tab on=@onTab
+      tab "Overview" value=overview icon=chart-column
+        StatRow stats=@stats
+        grid cols=1,1,2
+          card "Visit frequency" description="Visits by day of week"
+            chart bar x=Mon..Sun tooltip=true size=sm
+              series "Visits" @visits
+          card "Favourite items" description="Most ordered"
+            if @favorites.length
+              list
+                each @favorites as f
+                  item @f.name @f.count
+            else
+              text "No orders yet." tone=muted
+      tab "Transactions" value=transactions icon=receipt
+        card
+          if @rows.length
+            TransactionsTable rows=@rows sort=@sort sortBy=@sortBy
+          else
+            EmptyState title="No transactions yet" description="Payments from this customer will show up here."
+      tab "Notes" value=notes icon=notebook-pen
+        card "Notes" description="Visible to everyone on your team"
+          if @notes.length
+            list
+              each @notes as n
+                item @n.text @n.meta
+          else
+            text "No notes yet." tone=muted
+          textarea "Add a note" placeholder="Allergies, preferences, follow-ups…" rows=3 value=@draft on=@onDraft error=@noteError
+          button "Add note" icon=plus on=@onAddNote

@@ -5,6 +5,8 @@ import { navigate, useRoute, type Route } from '@/app/router'
 import Layout from '@/views/cafe/Layout.terse'
 import OverviewPage from './OverviewPage'
 import TransactionsPage from './TransactionsPage'
+import CustomersPage from './CustomersPage'
+import CustomerDetailPage from './CustomerDetailPage'
 
 const TITLES: Record<Route['name'], string> = {
   overview: 'Overview',
@@ -47,12 +49,18 @@ export default function AppShell() {
   }, [])
 
   const section = route.name === 'customer' ? 'customers' : route.name
-  const page =
-    route.name === 'transactions' ? (
-      <TransactionsPage store={store} search={search} onSearch={setSearch} openTx={route.tx} />
-    ) : (
-      <OverviewPage store={store} />
-    )
+  const page = (() => {
+    switch (route.name) {
+      case 'transactions':
+        return <TransactionsPage store={store} search={search} onSearch={setSearch} openTx={route.tx} />
+      case 'customers':
+        return <CustomersPage />
+      case 'customer':
+        return <CustomerDetailPage key={route.id} id={route.id} />
+      default:
+        return <OverviewPage store={store} />
+    }
+  })()
 
   return (
     <Layout
