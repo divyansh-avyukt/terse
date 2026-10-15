@@ -1,0 +1,46 @@
+use StatRow from "@/views/cafe/components/StatRow.terse"
+use StatusBadge from "@/views/cafe/components/StatusBadge.terse"
+props kpis, range, onRange, revenue, methods, topItems, recent
+
+page gap=md
+  StatRow stats=@kpis
+  grid cols=1,1,3
+    card "Revenue" description=@revenue.caption span=2
+      tabs value=@range on=@onRange
+        tab "7d"
+        tab "30d"
+        tab "90d"
+      chart line x=@revenue.labels tooltip=true
+        series "Revenue (₹)" @revenue.values
+    card "Payment methods" description="Share of successful payments, last 7 days"
+      chart donut x=Palm,UPI,Card,Cash tooltip=true legend=true
+        series "Share (%)" @methods
+  grid cols=1,1,2
+    card "Top items" description="By revenue, last 7 days"
+      table
+        thead
+          th "Item"
+          th "Sold" align=end
+          th "Revenue" align=end
+          th "Share"
+        each @topItems as item
+          tr
+            td @item.name
+            td @item.sold align=end
+            td @item.revenue align=end
+            td
+              progress @item.share
+    card "Recent transactions" description="Last 8 payments"
+      table
+        each @recent as t
+          tr on=@t.onOpen
+            td
+              row gap=sm
+                avatar fallback=@t.initials
+                col gap=none
+                  text @t.customer
+                  text @t.time tone=muted
+            td align=end
+              col gap=xs align=end
+                text @t.amount
+                StatusBadge status=@t.status tone=@t.tone

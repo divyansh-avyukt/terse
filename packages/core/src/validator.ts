@@ -1,7 +1,7 @@
 import type { RefValue, Value } from './ast.js'
 import { didYouMean, type Diagnostic, type Loc } from './errors.js'
 import type { IR, IRNode } from './ir.js'
-import { COMPONENTS, expandList } from './schema.js'
+import { COMPONENTS, expandList, UNIVERSAL_PROPS, type ComponentSpec } from './schema.js'
 
 /** Semantic checks: component names, props and their values, and that every @ref is in scope. */
 export function validate(ir: IR): Diagnostic[] {
@@ -51,19 +51,22 @@ export function validate(ir: IR): Diagnostic[] {
       for (const [key, v] of Object.entries(n.props)) {
         if (v.kind === 'ref') checkRef(v, scope)
         if (!spec) continue // user component props pass through unchanged
-        const type = spec.props[key]
+        const type = spec.props[key] ?? UNIVERSAL_PROPS[key]
         if (!type) {
           const valid = Object.keys(spec.props)
           report(`unknown prop '${key}' on '${n.name}'${didYouMean(key, valid) || (valid.length ? ` — valid props: ${valid.join(', ')}` : ' — it takes no props')}`, { line: v.line, col: v.col - key.length - 1 }) // point at key=
-        } else checkValue(n.name, key, v, type, report)
+        } else if (!(v.kind === 'ref' && spec.dynamic?.includes(key))) checkValue(n.name, key, v, type, report)
       }
       for (const r of spec?.required ?? []) if (!(r in n.props)) report(`'${n.name}' requires '${r}'`, n)
+      if (!n.children.length) {
+        for (const r of spec?.requiredWithoutChildren ?? []) if (!(r in n.props)) report(`'${n.name}' requires '${r}' (or children)`, n)
+      }
       if (spec && !spec.children && n.children.length) report(`'${n.name}' cannot have children`, n.children[0])
       if (typeof spec?.children === 'string') {
         const only = spec.children
         for (const c of n.children) if (c.kind !== 'component' || c.name !== only) report(`'${n.name}' can only contain '${only}' lines`, c)
       }
-      if (spec?.parent && parent !== spec.parent) report(`'${n.name}' must be inside a '${spec.parent}'`, n)
+      if (spec?.parent && !allowed(spec.parent).includes(parent!)) report(`'${n.name}' must be inside ${allowed(spec.parent).map((p) => `a '${p}'`).join(' or ')}`, n)
       walk(n.children, scope, n.name)
     }
   }
@@ -71,6 +74,8 @@ export function validate(ir: IR): Diagnostic[] {
   walk(ir.body, new Set(ir.props.map((p) => p.name)))
   return out.sort((a, b) => a.line - b.line || a.col - b.col)
 }
+
+const allowed = (p: NonNullable<ComponentSpec['parent']>): readonly string[] => (typeof p === 'string' ? [p] : p)
 
 function checkValue(comp: string, key: string, v: Value, type: (typeof COMPONENTS)[string]['props'][string], report: (m: string, at: Loc) => void) {
   const shown = v.kind === 'ref' ? `@${v.path.join('.')}` : JSON.stringify(v.value)
@@ -85,8 +90,11 @@ function checkValue(comp: string, key: string, v: Value, type: (typeof COMPONENT
     report(`'${key}' on '${comp}' must be true, false or a reference, got ${shown}`, v)
   } else if (type === 'literal' && v.kind === 'ref') {
     report(`'${key}' on '${comp}' must be a literal, not a reference`, v)
-  } else if (type === 'list' || type === 'numbers') {
-    if (v.kind === 'ref') return report(`'${key}' on '${comp}' must be a literal list like ${type === 'list' ? 'a,b,c' : '1,2,3'}`, v)
+  } else if (type === 'list' || type === 'numbers' || type === 'items') {
+    if (v.kind === 'ref') {
+      if (type === 'list') report(`'${key}' on '${comp}' must be a literal list like a,b,c`, v)
+      return
+    }
     try {
       const items = expandList(String(v.value))
       const bad = type === 'numbers' && items.find((x) => !Number.isFinite(Number(x)))

@@ -1,9 +1,26 @@
-import type { IRComponent, Literal, StyleToken, Value } from '@terse/core'
+import type { IRComponent, IRNode, Literal, StyleToken, Value } from '@terse/core'
 
 /** Placeholder in an adapter's output where the node's own children go. */
 export const CHILDREN = Symbol('children')
 
-/** A JSX element. Prop values are raw JSX attribute values: `"text"` or `{expr}`; undefined props are skipped. */
+/** Placeholder for the subset of the node's children that `match` selects, for components with
+ *  several slots (a menu's trigger vs. its items). `each`/`if` children are matched by what they contain. */
+export interface Pick {
+  pick: (n: IRNode) => boolean
+}
+export const pick = (match: (n: IRNode) => boolean): Pick => ({ pick: match })
+
+/** Matches nodes that are (or, through each/if, contain) one of these components. */
+export const named =
+  (...names: string[]) =>
+  (n: IRNode): boolean => {
+    if (n.kind === 'component') return names.includes(n.name)
+    const kids = n.kind === 'each' ? n.children : [...n.then, ...(n.else ?? [])]
+    return kids.length > 0 && kids.every(named(...names))
+  }
+
+/** A JSX element. Prop values are raw JSX attribute values: `"text"` or `{expr}`; undefined props are skipped.
+ *  Tag `''` is a fragment; nested fragments are flattened into their parent. */
 export interface Jsx {
   tag: string
   props?: Record<string, string | undefined>
@@ -25,7 +42,7 @@ export interface JsxIf {
 }
 
 /** A string child is raw JSX: escaped text or `{expr}`. */
-export type JsxChild = Jsx | JsxEach | JsxIf | string | typeof CHILDREN
+export type JsxChild = Jsx | JsxEach | JsxIf | string | typeof CHILDREN | Pick
 
 export interface RenderContext {
   style: StyleAdapter
@@ -39,6 +56,9 @@ export interface RenderContext {
   child(v: Value | undefined): string | undefined
   /** The literal value of a prop, or undefined when it is missing or a reference. */
   lit(v: Value | undefined): Literal | undefined
+  /** A JSX attribute value picking from `table` by v: a literal resolves now, a @ref to a runtime lookup
+   *  (so every entry stays a literal string in the adapter's source). undefined when v is. */
+  lookup(v: Value | undefined, table: Record<string, string>, fallback?: string): string | undefined
   /** The node's style-token props (gap, tone, ...) as strings, over the given defaults. */
   tokens(node: IRComponent, defaults?: Partial<Record<StyleToken, string>>): Partial<Record<StyleToken, string>>
 }

@@ -1,0 +1,4 @@
+# A payment status. The status → tone mapping is STATUS_TONE in app/format.ts.
+props status, tone
+
+badge @status tone=@tone

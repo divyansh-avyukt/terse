@@ -1,0 +1,40 @@
+# App shell: sidebar (rail on md+, drawer on mobile) + sticky top bar + the current page.
+props nav, go, title, content
+props collapsed, onCollapse, drawerOpen, onDrawer, onMenu
+props stores, store, onStore
+props search, onSearch, notifications, dark, onTheme
+props user, onProfile, onBilling, onSignOut
+
+shell
+  sidebar collapsed=@collapsed open=@drawerOpen on=@onDrawer
+    row gap=sm pad=sm
+      icon coffee size=md
+      heading "Brewpay" level=3 size=sm hide=collapsed
+    navitem "Overview" icon=layout-dashboard active=@nav.overview on=@go.overview
+    navitem "Transactions" icon=receipt active=@nav.transactions on=@go.transactions
+    navitem "Customers" icon=users active=@nav.customers on=@go.customers
+    navitem "Menu" icon=coffee active=@nav.menu on=@go.menu
+    navitem "Settings" icon=settings active=@nav.settings on=@go.settings
+    spacer
+    select "Store" options=@stores value=@store on=@onStore hide=collapsed
+    button "Collapse sidebar" size=icon variant=ghost icon=panel-left on=@onCollapse hide=mobile
+  col gap=none grow=true
+    bar justify=between
+      row gap=sm
+        button "Open navigation" size=icon variant=ghost icon=menu on=@onMenu hide=desktop
+        heading @title level=1 size=sm
+      row gap=xs
+        input placeholder="Search transactions" type=search icon=search value=@search on=@onSearch hide=mobile
+        if @dark
+          button "Switch to light mode" size=icon variant=ghost icon=sun on=@onTheme
+        else
+          button "Switch to dark mode" size=icon variant=ghost icon=moon on=@onTheme
+        button "Notifications" size=icon variant=ghost icon=bell count=@notifications
+        menu label=@user.name
+          trigger
+            avatar @user.avatar fallback=@user.initials
+          menuitem "Profile" icon=user on=@onProfile
+          menuitem "Billing" icon=credit-card on=@onBilling
+          separator
+          menuitem "Sign out" icon=log-out tone=destructive on=@onSignOut
+    slot @content

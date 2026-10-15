@@ -6,7 +6,15 @@ each can also be written as `key=value`. **Required** props are marked `*`.
 Prop types: **text** (literal or `@ref`) · **ref** (`@ref` only) · **handler** (`@ref` to a function) ·
 **bool** (`true`/`false` or `@ref`) · **literal** (not a `@ref`) · **list** (`a,b,c`; ranges expand:
 `Thu..Wed` → Thu,Fri,…,Wed (weekdays wrap), `1..5`) · **numbers** (a list of numbers, `72,68,65.5`) ·
-**token** (literal from a fixed set, see SPEC).
+**items** (a list literal, or a `@ref` to an array) · **token** (literal from a fixed set, see SPEC). A token
+marked *runtime* also takes a `@ref` whose value is one of the same words (`badge @t.status tone=@t.tone`).
+
+## Universal props
+
+Every built-in component also takes:
+| prop | type | notes |
+|---|---|---|
+| hide | `mobile desktop collapsed` | hide below `md`, from `md` up, or while the enclosing `sidebar` shows icons only |
 
 ## Layout
 
@@ -23,6 +31,7 @@ Prop types: **text** (literal or `@ref`) · **ref** (`@ref` only) · **handler**
 | prop | type | default |
 |---|---|---|
 | title | text | — |
+| description | text | — muted line under the title |
 | gap, pad | token | md |
 
 ### row
@@ -33,13 +42,18 @@ Prop types: **text** (literal or `@ref`) · **ref** (`@ref` only) · **handler**
 | align | token | center |
 | justify | token | start |
 | wrap | `true`/`false` | false |
+| grow | `true`/`false` | false — take the remaining space in a parent row/col (`flex-1`) |
 
 ### col
-`col` — vertical flex. Props: `gap` (md), `pad`, `align`, `justify`.
+`col` — vertical flex. Props: `gap` (md), `pad`, `align`, `justify`, `grow`, `span` (as on `card`).
 
 ### grid
 `grid` — responsive grid. Props: `cols` (3), `gap` (md), `pad`. A single `cols=N` is 1 column on small
-screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
+screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up; a triple `cols=1,1,2` is 1 column, 1 from
+`md`, 2 from `lg` (`1,1,2 1,1,3 1,2,3 1,2,4 2,2,4`).
+
+### spacer
+`spacer` — takes the free space in a row or column, pushing what follows to the end. No props.
 
 ### card
 `card <title>` — shadcn `Card` with an optional header; children go in `CardContent` as a column.
@@ -48,7 +62,9 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 | title | text |
 | description | text |
 | gap, pad | token |
-| tone | `default transparent` — transparent: no border, shadow or background |
+| tone | `default transparent destructive` — transparent: no border, shadow or background; destructive: red border |
+| on | handler — makes the whole card clickable (and keyboard-focusable) |
+| span | `1 2 3` — grid columns it takes from `lg` up, inside a `grid` |
 
 ### separator
 `separator` — horizontal rule. No props, no children.
@@ -65,10 +81,29 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 | tone | token | default |
 
 ### text
-`text <text*>` — paragraph. Props: `size` (sm; also `xl` = display figure, `text-2xl font-bold`), `tone`.
+`text <text*>` — paragraph. Props: `size` (sm; also `xl` = display figure, `text-2xl font-bold`), `tone` (*runtime*).
 
 ### badge
-`badge <text*>` — shadcn `Badge`. `tone`: default → secondary, muted → outline, primary → default, destructive → destructive.
+`badge <text*>` — shadcn `Badge`. `tone` (*runtime*): default → secondary, muted → outline, primary → default,
+success/warning → tinted green/amber, destructive → destructive.
+
+### avatar
+`avatar <src> fallback=…` — shadcn `Avatar`: the image, or the fallback text (initials) while it loads or when missing.
+| prop | type |
+|---|---|
+| src | text |
+| fallback* | text |
+| size | token — sm 32px, md 40px, lg 64px (sm) |
+
+### progress
+`progress <value*>` — shadcn `Progress` bar. `value` is 0–100.
+
+### skeleton
+`skeleton` — loading placeholder bars.
+| prop | type |
+|---|---|
+| lines | literal — number of bars (1) |
+| size | token — bar height: sm 16px, md 40px, lg 96px (sm) |
 
 ### stat
 `stat <label*> <value*>` — KPI card: optional icon, small muted label, large bold value.
@@ -76,7 +111,7 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 |---|---|
 | label*, value* | text |
 | delta | text — small caption under the value |
-| tone | token — colour of `delta` (muted) |
+| tone | token, *runtime* — colour of `delta` (muted) |
 | icon | literal — lucide icon name, e.g. `droplets` (size md) |
 | align | token — horizontal alignment of the content (start) |
 
@@ -86,6 +121,7 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 |---|---|
 | name* | literal |
 | size | token — sm 16px, md 20px, lg 24px (default 24px) |
+| tone | token — colour |
 
 ### callout
 `callout <title*> <description>` — shadcn `Alert`.
@@ -94,6 +130,9 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 | title* | text |
 | description | text |
 | icon | literal — lucide icon name |
+| tone | `default destructive` |
+
+Children (buttons) render as an action row under the description.
 
 ### image
 `image <src*>` — `img`. Props: `alt` (text, default `""`), `size` (md).
@@ -104,12 +143,40 @@ screens; a pair `cols=2,4` is 2 columns below `md` and 4 from `md` up.
 ## Data
 
 ### table
-`table <rows*>` — shadcn `Table` with one row per item.
+`table <rows>` — shadcn `Table`. Two forms: `rows` + `cols` for a plain table of fields, or children
+(`thead`, then `tr` rows, usually through `each`) for cells with any content.
 | prop | type | notes |
 |---|---|---|
-| rows* | ref | the list, e.g. `@orders` |
-| cols* | list | fields to show, e.g. `id,customer,total` |
+| rows | ref | the list, e.g. `@orders` (required without children) |
+| cols | list | fields to show, e.g. `id,customer,total` (required without children) |
 | headers | list | header labels; default is the humanized field name (`lastSeen` → "Last seen") |
+
+```
+table
+  thead
+    th "Amount" align=end sort=@sort.amount on=@sortBy.amount
+  each @rows as t
+    tr on=@t.onOpen
+      td @t.amount align=end
+```
+
+### thead
+`thead` — the header row of a `table`. Children are `th` lines.
+
+### th
+`th <label>` — a header cell. Only inside `thead`.
+| prop | type | notes |
+|---|---|---|
+| label | text | |
+| align | token | `end` right-aligns (numbers) |
+| on | handler | makes the header a sort button |
+| sort | text | `asc`, `desc`, or anything else for unsorted: picks the arrow icon and `aria-sort` |
+
+### tr
+`tr` — a body row. Only inside `table`. Children are `td` lines. Props: `on` (handler) makes the row clickable.
+
+### td
+`td <text>` — a cell. Only inside `tr`. Shows `text`, or its children. Props: `align` (token).
 
 ### list
 `list` — rows separated by a border. Children are `item` lines (directly or through `each`/`if`).
@@ -127,8 +194,8 @@ No props.
 `--chart-1`, `--chart-2`, … in order.
 | prop | type | notes |
 |---|---|---|
-| type* | `bar area` | several bar series are grouped |
-| x* | list | x-axis categories, e.g. `Thu..Wed` |
+| type* | `bar area line donut` | several bar series are grouped; donut uses the first series' values, one slice per `x`, named by `x` |
+| x* | items | x-axis categories, e.g. `Thu..Wed`, or `@revenue.labels` |
 | xlabel, ylabel | text | axis titles |
 | size | token | height: sm 200px, md 260px, lg 320px (md) |
 | curve | `linear monotone natural` | area line shape |
@@ -139,7 +206,7 @@ No props.
 | prop | type |
 |---|---|
 | label* | text |
-| values* | numbers |
+| values* | numbers — literal, or a `@ref` to an array of numbers |
 
 ## Input
 
@@ -147,9 +214,11 @@ No props.
 `button <label*>` — shadcn `Button`.
 | prop | type | notes |
 |---|---|---|
-| label* | text | |
+| label* | text | with `size=icon`, the accessible name only |
 | variant | `default outline secondary ghost destructive link` | |
-| size | token | |
+| size | `sm md lg icon` | `icon`: square, icon only |
+| icon | literal | lucide icon name, before the label |
+| count | text | small red counter on the corner (hidden when falsy) |
 | on | handler | becomes `onClick` |
 | disabled | bool | |
 | type | `button submit` | |
@@ -165,6 +234,119 @@ No props.
 | name | text | also used as the element id |
 | on | handler | called with the new **string value** |
 | disabled | bool | |
+| error | text | shown in red under the field (when truthy) and sets `aria-invalid` |
+| icon | literal | lucide icon inside the left edge, e.g. `search` |
+
+### textarea
+`textarea <label>` — shadcn `Textarea`. Props as `input` (`label placeholder value name on disabled error`), plus
+`rows` (literal number).
+
+### select
+`select <label>` — shadcn `Select`. Props: `label`, `placeholder`, `value`, `name`, `disabled`, `error` as `input`;
+`on` is called with the chosen value.
+| prop | type | notes |
+|---|---|---|
+| options* | items | `All,Success,Failed`, or a `@ref` to strings or `{ value, label }` objects |
+
+### switch
+`switch <label>` — shadcn `Switch` with its label on the left (a settings row).
+| prop | type | notes |
+|---|---|---|
+| label | text | |
+| description | text | muted line under the label |
+| checked | bool | |
+| on | handler | called with the new boolean |
+| disabled | bool | |
+
+### checkbox
+`checkbox <label>` — shadcn `Checkbox` with its label on the right. Props as `switch`: `label`, `description`,
+`checked`, `on`, `disabled`.
+
+### tabs
+`tabs` — shadcn `Tabs`. Children are `tab` lines. With `value`/`on` it is controlled; `on` gets the tab's value.
+Tabs without children are a segmented control: render the content yourself under `if`.
+| prop | type |
+|---|---|
+| value | text |
+| on | handler |
+
+### tab
+`tab <label*>` — one tab. Its children (if any) are the panel. Only inside `tabs`.
+| prop | type | notes |
+|---|---|---|
+| label* | text | |
+| value | literal | default: the label |
+| icon | literal | lucide icon name |
+
+## App chrome
+
+### shell
+`shell` — full-height app frame: a `sidebar` then the main column (`col grow=true`). No props.
+
+### sidebar
+`sidebar` — app navigation. A rail on `md`+ (icons only between `md` and `lg`, or when `collapsed`), and a
+left drawer below `md`. The same children render in both, so use `hide=collapsed` on things that need room.
+| prop | type | notes |
+|---|---|---|
+| collapsed | bool | icons only on `lg`+ too |
+| open | bool | the mobile drawer is open |
+| on | handler | called with the drawer's new open state |
+
+### navitem
+`navitem <label*>` — a sidebar link: icon plus label (the label hides when collapsed).
+| prop | type |
+|---|---|
+| label* | text |
+| icon | literal |
+| active | bool |
+| on | handler |
+
+### bar
+`bar` — a sticky bar across the top (header) or bottom (action bar) of the main column.
+| prop | type | default |
+|---|---|---|
+| side | `top bottom` | top |
+| gap | token | sm |
+| justify | token | start |
+
+### slot
+`slot <content*>` — renders a React node passed in as a prop, e.g. a layout's page: `slot @content`.
+
+## Overlays
+
+`menu`, `dialog` and `sheet` take an optional `trigger` child that opens them; all their other children are
+the content.
+
+### trigger
+`trigger` — what opens a `menu`, `dialog` or `sheet` (usually one `button` or `avatar`). No props.
+
+### menu
+`menu` — shadcn `DropdownMenu`. Content is `menuitem` and `separator` lines.
+| prop | type | default |
+|---|---|---|
+| label | text | heading above the items |
+| align | `start center end` | end |
+
+### menuitem
+`menuitem <label*>` — a menu entry. Only inside `menu`.
+| prop | type |
+|---|---|
+| label* | text |
+| icon | literal |
+| on | handler |
+| tone | `default destructive` |
+
+### dialog
+`dialog <title*>` — shadcn `Dialog`; children form a column under the title.
+| prop | type | notes |
+|---|---|---|
+| title* | text | |
+| description | text | |
+| open | bool | controlled when given |
+| on | handler | called with the new open state |
+
+### sheet
+`sheet <title*>` — shadcn `Sheet` from the right edge. Props as `dialog`: `title`, `description`, `open`, `on`.
 
 ## User components
 

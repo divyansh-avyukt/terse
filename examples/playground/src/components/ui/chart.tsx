@@ -67,7 +67,7 @@ type TooltipItem = {
   value?: number | string | (number | string)[]
   dataKey?: string | number | ((obj: unknown) => unknown)
   color?: string
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown> & { fill?: string }
 }
 
 function ChartTooltipContent({
@@ -90,12 +90,12 @@ function ChartTooltipContent({
     <div className={cn('border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl', className)}>
       {!hideLabel && label != null && <div className="font-medium">{label}</div>}
       <div className="grid gap-1.5">
-        {payload.map((item) => {
+        {payload.map((item, i) => {
           const key = String(item.dataKey ?? item.name ?? 'value')
           const itemConfig = config[key]
           return (
-            <div key={key} className="flex w-full items-center gap-2">
-              <div className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.color }} />
+            <div key={i} className="flex w-full items-center gap-2">
+              <div className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.color ?? item.payload?.fill }} />
               <div className="flex flex-1 justify-between gap-4 leading-none">
                 <span className="text-muted-foreground">{itemConfig?.label ?? item.name}</span>
                 {item.value != null && <span className="text-foreground font-mono font-medium tabular-nums">{item.value.toLocaleString()}</span>}
@@ -124,11 +124,11 @@ function ChartLegendContent({
 
   return (
     <div className={cn('flex items-center justify-center gap-4', verticalAlign === 'top' ? 'pb-3' : 'pt-3', className)}>
-      {payload.map((item) => {
+      {payload.map((item, i) => {
         const key = String(item.dataKey ?? item.value ?? 'value')
         const itemConfig = config[key]
         return (
-          <div key={key} className="flex items-center gap-1.5">
+          <div key={i} className="flex items-center gap-1.5">
             <div className="h-2 w-2 shrink-0 rounded-[2px]" style={{ backgroundColor: item.color }} />
             {itemConfig?.label ?? item.value}
           </div>

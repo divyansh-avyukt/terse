@@ -39,6 +39,30 @@ list
   series "Low" 55,52,50`,
   series: `chart area x=1..3 size=sm curve=natural
   series "Rain" 0.0,0.1,0.4`,
+  spacer: `row\n  text "left"\n  spacer\n  text "right"`,
+  textarea: `props note, onNote, err\ntextarea "Note" placeholder="Add a note" rows=3 value=@note on=@onNote error=@err`,
+  select: `props status, statuses, onStatus\ncol\n  select "Status" value=@status options=@statuses on=@onStatus\n  select "Schedule" options=Daily,Weekly placeholder="Pick one"`,
+  switch: `props on, onToggle\nswitch "Palm" description="Accept palm payments" checked=@on on=@onToggle`,
+  checkbox: `props daily, onDaily\ncheckbox "Daily summary" checked=@daily on=@onDaily`,
+  tabs: `props range, onRange\ntabs value=@range on=@onRange\n  tab "7d"\n  tab "30d"`,
+  tab: `tabs\n  tab "Overview" icon=chart-line\n    text "a"\n  tab "Notes" value=notes\n    text "b"`,
+  avatar: `props c\navatar @c.photo fallback=@c.initials size=md`,
+  progress: `props share\nprogress @share`,
+  skeleton: `skeleton lines=3 size=md`,
+  thead: `props rows, sort, onSortAmount\ntable\n  thead\n    th "ID"\n    th "Amount" align=end sort=@sort.amount on=@onSortAmount\n  each @rows as r\n    tr on=@r.onOpen\n      td @r.id\n      td @r.amount align=end`,
+  th: `props sort, onSort\ntable\n  thead\n    th "Amount" align=end sort=@sort on=@onSort`,
+  tr: `props rows\ntable\n  each @rows as r\n    tr on=@r.onOpen\n      td @r.id`,
+  td: `props r\ntable\n  tr\n    td\n      row gap=sm\n        avatar fallback=@r.initials\n        text @r.name`,
+  slot: `props content\ncol\n  slot @content`,
+  shell: `props content\nshell\n  col grow=true\n    slot @content`,
+  sidebar: `props collapsed, open, onOpen, go\nsidebar collapsed=@collapsed open=@open on=@onOpen\n  navitem "Overview" icon=layout-dashboard active=true on=@go.overview\n  spacer\n  text "v1" hide=collapsed`,
+  navitem: `props active, onGo\nnavitem "Customers" icon=users active=@active on=@onGo`,
+  bar: `props title\nbar justify=between\n  heading @title level=1 size=sm\n  button "Menu" size=icon icon=menu variant=ghost hide=desktop`,
+  menu: `props user, onSignOut\nmenu label="My account"\n  trigger\n    avatar fallback=@user.initials\n  menuitem "Profile" icon=user\n  separator\n  menuitem "Sign out" tone=destructive on=@onSignOut`,
+  menuitem: `menu\n  trigger\n    button "Open" variant=outline\n  menuitem "Billing" icon=credit-card`,
+  dialog: `props open, onOpen, onSave\ndialog "Add item" description="New menu item" open=@open on=@onOpen\n  trigger\n    button "Add item" icon=plus\n  input "Name"\n  button "Save" on=@onSave`,
+  sheet: `props open, onOpen\nsheet "Transaction" open=@open on=@onOpen\n  text "details"`,
+  trigger: `dialog "Confirm"\n  trigger\n    button "Delete" variant=destructive\n  text "Sure?"`,
 }
 
 describe('compiler snapshots', () => {
@@ -81,6 +105,34 @@ page "Dashboard"
     expect(() => tsx(`chart bar x=a\n  text "no"`)).toThrow("'chart' can only contain 'series' lines")
     expect(() => tsx(`item "orphan"`)).toThrow("'item' must be inside a 'list'")
     expect(() => tsx(`props n\nicon @n`)).toThrow("'name' on 'icon' must be a literal")
+  })
+
+  it('runtime tokens: dynamic props take a @ref, others still must be literal', () => {
+    const code = tsx(`props t\nbadge "Paid" tone=@t.tone`)
+    expect(code).toContain('variant={(({"default":"secondary"')
+    expect(code).toContain(')[t?.tone] ?? "secondary")}')
+    expect(() => tsx(`props t\nheading "x" tone=@t`)).toThrow("'tone' on 'heading' must be a literal")
+  })
+
+  it('charts take @ref data and zip it at runtime', () => {
+    const code = tsx(`props rev\nchart line x=@rev.labels\n  series "Revenue" @rev.values`)
+    expect(code).toContain('data={(rev?.labels ?? []).map((x: any, j: number) => ({ x, s1: rev?.values?.[j] }))}')
+    expect(tsx(`chart donut x=Palm,Card\n  series "Share" 60,40`)).toContain('{ x: "Palm", value: 60, fill: "var(--chart-1)" }')
+  })
+
+  it('hide merges into the root className (or wraps a root with no DOM node); tables need rows+cols or children', () => {
+    expect(tsx(`button "x" hide=mobile`)).toContain('<Button className="w-fit max-md:hidden">')
+    expect(tsx(`props t\ntext "x" tone=@t hide=desktop`)).toMatch(/className=\{"text-sm " \+ \(\(.*\[t\] \?\? ""\) \+ " md:hidden"\}/)
+    expect(tsx(`select options=a,b hide=collapsed`)).toContain('<div className="contents md:max-lg:hidden')
+    expect(() => tsx(`table`)).toThrow("'table' requires 'rows' (or children)")
+    expect(() => tsx(`td "x"`)).toThrow("'td' must be inside a 'tr'")
+    expect(() => tsx(`trigger\n  text "x"`)).toThrow("'trigger' must be inside a 'menu' or a 'dialog' or a 'sheet'")
+  })
+
+  it('pick() routes a trigger and the rest of the children into different slots', () => {
+    const code = tsx(`menu\n  trigger\n    button "Open"\n  menuitem "A"`)
+    expect(code.indexOf('<Button')).toBeLessThan(code.indexOf('<DropdownMenuContent'))
+    expect(code).toMatch(/<DropdownMenuTrigger asChild={true}>\s*<Button/)
   })
 
   it('escapes text that JSX would interpret', () => {

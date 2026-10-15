@@ -10,14 +10,14 @@ const PAGES = { dashboard: DashboardPage, settings: SettingsPage, login: LoginPa
 
 type PageKey = keyof typeof PAGES
 const pageFromPath = (): PageKey => {
-  const p = location.pathname.slice(1)
+  const p = location.pathname.replace(/^\/demo\/?/, '')
   return p in PAGES ? (p as PageKey) : 'dashboard'
 }
 
 export default function App() {
   const [page, setPageState] = useState<PageKey>(pageFromPath)
   const setPage = (p: PageKey) => {
-    history.pushState(null, '', `/${p}`)
+    history.pushState(null, '', `/demo/${p}`)
     setPageState(p)
   }
   useEffect(() => {

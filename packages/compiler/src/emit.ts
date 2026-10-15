@@ -25,6 +25,14 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
     attr: (v) => (v === undefined ? undefined : v.kind === 'lit' && typeof v.value === 'string' && /^[^"&\\\n]*$/.test(v.value) ? `"${v.value}"` : `{${expr(v)}}`),
     child: (v) => (v === undefined ? undefined : v.kind === 'lit' ? text(String(v.value)) : `{${expr(v)}}`),
     lit: (v) => (v?.kind === 'lit' ? v.value : undefined),
+    lookup: (v, table, fallback = '') => {
+      if (v === undefined) return undefined
+      if (v.kind === 'lit') {
+        const hit = table[String(v.value)] ?? fallback
+        return hit ? `"${hit}"` : undefined
+      }
+      return `{((${JSON.stringify(table)} as Record<string, string>)[${expr(v)}] ?? ${JSON.stringify(fallback)})}`
+    },
     tokens: (node, defaults = {}) => {
       const out: Partial<Record<StyleToken, string>> = { ...defaults }
       for (const key of Object.keys(TOKENS) as StyleToken[]) {
@@ -47,20 +55,21 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
       const jsx: Jsx = n.builtin
         ? opts.components.render(n, ctx)
         : { tag: n.name, props: Object.fromEntries(Object.entries(n.props).map(([k, v]) => [k, ctx.attr(v)])), children: [CHILDREN] }
-      return { ...fill(jsx, children), loc }
+      return { ...fill(jsx, children, n.children), loc }
     })
 
   const body = lower(ir.body)
   const lines: { text: string; loc?: Loc }[] = []
   let fragmentNeeded = false
-  print(body.length === 1 && isJsx(body[0]) ? body[0] : { tag: '', children: body }, 2, undefined, 0)
+  const only = body.length === 1 ? body[0] : undefined
+  print(only && typeof only === 'object' && 'tag' in only ? only : { tag: '', children: body }, 2, undefined, 0)
 
   function print(c: Located, depth: number, loc: Loc | undefined, eachDepth: number) {
     loc = c.loc ?? loc
     const pad = '  '.repeat(depth)
     const out = (text: string) => lines.push({ text: pad + text, loc })
     if (typeof c === 'string') return out(c)
-    if (c === CHILDREN) return
+    if (c === CHILDREN || 'pick' in c) return
     if ('each' in c) {
       const i = eachDepth ? `i${eachDepth + 1}` : 'i'
       const body = c.body.length === 1 && isJsx(c.body[0]) ? withKey(c.body[0], i) : { tag: 'Fragment', props: { key: `{${i}}` }, children: c.body }
@@ -118,14 +127,15 @@ export function emit(ir: IR, source: string, opts: EmitOptions): { code: string;
   return { code: all.map((l) => l.text).join('\n') + '\n', map }
 }
 
-/** Replace the CHILDREN placeholder (anywhere in the adapter's tree) with the node's children. */
-function fill(jsx: Jsx, children: Located[]): Jsx {
-  return {
-    ...jsx,
-    children: jsx.children?.flatMap((c): JsxChild[] =>
-      c === CHILDREN ? children : typeof c === 'object' && 'tag' in c ? [fill(c, children)] : [c],
-    ),
-  }
+/** Replace the CHILDREN and pick() placeholders (anywhere in the adapter's tree) with the node's children,
+ *  flattening nested fragments. */
+function fill(jsx: Jsx, children: Located[], ir: IRNode[]): Jsx {
+  const out = jsx.children?.flatMap((c): JsxChild[] => {
+    if (c === CHILDREN) return children
+    if (typeof c === 'object' && 'pick' in c) return children.filter((_, i) => c.pick(ir[i]))
+    return typeof c === 'object' && 'tag' in c ? [fill(c, children, ir)] : [c]
+  })
+  return { ...jsx, children: out?.flatMap((c) => (typeof c === 'object' && 'tag' in c && c.tag === '' ? (c.children ?? []) : [c])) }
 }
 
 const isJsx = (c: Located): c is Jsx & { loc?: Loc } => typeof c === 'object' && 'tag' in c && c.tag !== ''
