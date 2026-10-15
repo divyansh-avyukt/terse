@@ -8,6 +8,15 @@ importers:
 
   .:
     devDependencies:
+      '@terse/adapter-shadcn':
+        specifier: workspace:*
+        version: link:packages/adapter-shadcn
+      '@terse/compiler':
+        specifier: workspace:*
+        version: link:packages/compiler
+      '@terse/style-tailwind':
+        specifier: workspace:*
+        version: link:packages/style-tailwind
       '@types/node':
         specifier: ^22.10.0
         version: 22.20.5

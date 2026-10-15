@@ -1,0 +1,20 @@
+props profile, notifications, saving, onName, onEmail, onSave, onDelete
+
+page "Settings"
+  section "Profile"
+    card "Personal information" description="Update your name and email address"
+      input "Name" value=@profile.name on=@onName
+      input "Email" type=email value=@profile.email on=@onEmail
+      row justify=end
+        button "Save changes" on=@onSave disabled=@saving
+  section "Notifications"
+    card
+      each @notifications as n
+        row justify=between
+          col gap=xs
+            text @n.label
+            text @n.description tone=muted
+          badge @n.status
+  section "Danger zone"
+    card "Delete account" description="Permanently remove your account and all of its data"
+      button "Delete account" variant=destructive on=@onDelete

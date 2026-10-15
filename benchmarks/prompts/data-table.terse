@@ -1,0 +1,15 @@
+props users, summary, query, onQuery, onExport, onInvite, onPrev, onNext
+
+page "Users"
+  row justify=between
+    input placeholder="Search users…" type=search value=@query on=@onQuery
+    row gap=sm
+      button "Export" variant=outline on=@onExport
+      button "Invite user" on=@onInvite
+  card
+    table @users cols=name,email,role,status,lastSeen headers="Name,Email,Role,Status,Last seen"
+  row justify=between
+    text @summary tone=muted
+    row gap=sm
+      button "Previous" variant=outline size=sm on=@onPrev
+      button "Next" variant=outline size=sm on=@onNext

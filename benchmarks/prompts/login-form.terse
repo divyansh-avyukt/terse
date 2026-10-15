@@ -1,0 +1,10 @@
+props email, password, error, loading, onEmail, onPassword, onSubmit
+
+page
+  card "Sign in" description="Enter your email below to sign in to your account"
+    input "Email" type=email placeholder="m@example.com" value=@email on=@onEmail
+    input "Password" type=password value=@password on=@onPassword
+    if @error
+      text @error tone=destructive
+    button "Sign in" type=submit on=@onSubmit disabled=@loading
+    link "Forgot your password?" "/forgot-password" tone=muted

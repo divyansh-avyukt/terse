@@ -1,0 +1,13 @@
+props plans, onSelect
+
+page "Pricing"
+  text "Choose the plan that fits your team. Cancel anytime." tone=muted
+  grid cols=3
+    each @plans as plan
+      card @plan.name description=@plan.description
+        heading @plan.price size=lg
+        if @plan.popular
+          badge "Most popular" tone=primary
+        each @plan.features as feature
+          text @feature
+        button "Get started" on=@onSelect
