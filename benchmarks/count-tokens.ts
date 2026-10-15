@@ -1,8 +1,8 @@
 // Token comparison: .terse vs the equivalent idiomatic TSX, plus the TSX Terse compiles to.
 // Run: pnpm bench   (tokenizer: o200k_base via js-tiktoken — an approximation of any LLM's tokenizer)
-import { shadcn } from '@terse/adapter-shadcn'
-import { compile } from '@terse/compiler'
-import { tailwind } from '@terse/style-tailwind'
+import { shadcn } from '@terseui/adapter-shadcn'
+import { compile } from '@terseui/compiler'
+import { tailwind } from '@terseui/style-tailwind'
 import { getEncoding } from 'js-tiktoken'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

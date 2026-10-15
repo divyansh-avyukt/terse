@@ -7,10 +7,10 @@ const pkg = (name: string) => fileURLToPath(new URL(`./packages/${name}/src/inde
 export default defineConfig({
   resolve: {
     alias: {
-      '@terse/core': pkg('core'),
-      '@terse/compiler': pkg('compiler'),
-      '@terse/adapter-shadcn': pkg('adapter-shadcn'),
-      '@terse/style-tailwind': pkg('style-tailwind'),
+      '@terseui/core': pkg('core'),
+      '@terseui/compiler': pkg('compiler'),
+      '@terseui/adapter-shadcn': pkg('adapter-shadcn'),
+      '@terseui/style-tailwind': pkg('style-tailwind'),
     },
   },
   test: { include: ['packages/*/test/**/*.test.ts'] },

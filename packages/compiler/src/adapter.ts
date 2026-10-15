@@ -1,4 +1,4 @@
-import type { IRComponent, Literal, StyleToken, Value } from '@terse/core'
+import type { IRComponent, Literal, StyleToken, Value } from '@terseui/core'
 
 /** Placeholder in an adapter's output where the node's own children go. */
 export const CHILDREN = Symbol('children')

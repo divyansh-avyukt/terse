@@ -1,4 +1,4 @@
-import { analyze } from '@terse/core'
+import { analyze } from '@terseui/core'
 import { emit, type EmitOptions } from './emit.js'
 
 export * from './adapter.js'

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* Classes in compiled .terse output come from the adapters, so Tailwind must scan them. */
-@source "../node_modules/@terse/adapter-shadcn/src";
-@source "../node_modules/@terse/style-tailwind/src";
+@source "../node_modules/@terseui/adapter-shadcn/src";
+@source "../node_modules/@terseui/style-tailwind/src";
 
 @custom-variant dark (&:is(.dark *));
 

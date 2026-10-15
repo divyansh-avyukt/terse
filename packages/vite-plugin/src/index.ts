@@ -1,5 +1,5 @@
-import { compile, type ComponentAdapter, type StyleAdapter } from '@terse/compiler'
-import { TerseError } from '@terse/core'
+import { compile, type ComponentAdapter, type StyleAdapter } from '@terseui/compiler'
+import { TerseError } from '@terseui/core'
 import { readFile } from 'node:fs/promises'
 import type { Plugin } from 'vite'
 

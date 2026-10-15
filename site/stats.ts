@@ -1,9 +1,9 @@
 // Build-time facts for the landing page. Every number on the page comes from here, measured from
 // real files when the site builds, so the copy can't drift from the code.
-import { shadcn } from '@terse/adapter-shadcn'
-import { compile } from '@terse/compiler'
-import { analyze, TerseError } from '@terse/core'
-import { tailwind } from '@terse/style-tailwind'
+import { shadcn } from '@terseui/adapter-shadcn'
+import { compile } from '@terseui/compiler'
+import { analyze, TerseError } from '@terseui/core'
+import { tailwind } from '@terseui/style-tailwind'
 import { getEncoding } from 'js-tiktoken'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'

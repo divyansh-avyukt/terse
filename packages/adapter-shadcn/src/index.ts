@@ -1,5 +1,5 @@
-import { CHILDREN, type ComponentAdapter, type Jsx, type JsxChild } from '@terse/compiler'
-import { expandList, parseInline, type IRComponent, type Value } from '@terse/core'
+import { CHILDREN, type ComponentAdapter, type Jsx, type JsxChild } from '@terseui/compiler'
+import { expandList, parseInline, type IRComponent, type Value } from '@terseui/core'
 
 const IDENT = /^[A-Za-z_$][\w$]*$/
 

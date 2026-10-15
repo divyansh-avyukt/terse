@@ -9,9 +9,9 @@
     "dev": "pnpm --filter playground dev"
   },
   "devDependencies": {
-    "@terse/adapter-shadcn": "workspace:*",
-    "@terse/compiler": "workspace:*",
-    "@terse/style-tailwind": "workspace:*",
+    "@terseui/adapter-shadcn": "workspace:*",
+    "@terseui/compiler": "workspace:*",
+    "@terseui/style-tailwind": "workspace:*",
     "@types/node": "^22.10.0",
     "js-tiktoken": "^1.0.21",
     "typescript": "^5.9.3",

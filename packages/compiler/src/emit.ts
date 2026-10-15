@@ -1,4 +1,4 @@
-import { TOKENS, type IR, type IRNode, type Loc, type StyleToken, type Value } from '@terse/core'
+import { TOKENS, type IR, type IRNode, type Loc, type StyleToken, type Value } from '@terseui/core'
 import { CHILDREN, type ComponentAdapter, type Jsx, type JsxChild, type RenderContext, type StyleAdapter } from './adapter.js'
 import { lineMap, type SourceMap } from './sourcemap.js'
 

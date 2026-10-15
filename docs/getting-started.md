@@ -27,7 +27,7 @@ pnpm add -D @types/node
 `tsconfig.app.json`: inside `compilerOptions`, add `paths`, and the Terse types to `types`:
 
 ```json
-"types": ["vite/client", "@terse/vite-plugin/client"],
+"types": ["vite/client", "@terseui/vite-plugin/client"],
 "paths": { "@/*": ["./src/*"] },
 ```
 
@@ -55,9 +55,9 @@ pnpm add -D @terseui/vite-plugin @terseui/adapter-shadcn @terseui/style-tailwind
 `terse.config.ts` (project root) selects the component and style adapters:
 
 ```ts
-import { shadcn } from '@terse/adapter-shadcn'
-import { tailwind } from '@terse/style-tailwind'
-import { defineConfig } from '@terse/vite-plugin'
+import { shadcn } from '@terseui/adapter-shadcn'
+import { tailwind } from '@terseui/style-tailwind'
+import { defineConfig } from '@terseui/vite-plugin'
 
 export default defineConfig({ components: shadcn({ ui: '@/components/ui' }), style: tailwind() })
 ```
@@ -66,7 +66,7 @@ export default defineConfig({ components: shadcn({ ui: '@/components/ui' }), sty
 
 ```ts
 import tailwindcss from '@tailwindcss/vite'
-import terse from '@terse/vite-plugin'
+import terse from '@terseui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
 import { defineConfig } from 'vite'
@@ -82,8 +82,8 @@ export default defineConfig({
 classes that compiled views use:
 
 ```css
-@source "../node_modules/@terse/adapter-shadcn/src";
-@source "../node_modules/@terse/style-tailwind/src";
+@source "../node_modules/@terseui/adapter-shadcn/src";
+@source "../node_modules/@terseui/style-tailwind/src";
 ```
 
 ## 5. Project layout and agent instructions
@@ -103,7 +103,7 @@ imports the Terse spec, so Claude Code knows the language in every session.
 ## 6. Check it
 
 ```sh
-pnpm exec tsc -b       # .terse imports type-check via @terse/vite-plugin/client
+pnpm exec tsc -b       # .terse imports type-check via @terseui/vite-plugin/client
 pnpm dev               # edit a .terse file: hot reload; make a typo: error overlay with file:line:col
 pnpm build
 ```

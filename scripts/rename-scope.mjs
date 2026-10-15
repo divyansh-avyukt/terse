@@ -1,4 +1,4 @@
-// Renames the npm scope @terse/ → @terseui/ in every tracked text file (except the lockfile),
+// Renames the npm scope @terseui/ → @terseui/ in every tracked text file (except the lockfile),
 // then you run `pnpm install` to regenerate pnpm-lock.yaml. Safe to run twice.
 // Run after merging branches:  node scripts/rename-scope.mjs && pnpm install
 import { execSync } from 'node:child_process'
@@ -13,8 +13,8 @@ for (const f of files) {
   } catch {
     continue
   }
-  if (src.includes('\u0000') || !src.includes('@terse/')) continue // binary, or nothing to do
-  writeFileSync(f, src.replaceAll('@terse/', '@terseui/'))
+  if (src.includes('\u0000') || !src.includes('@terseui/')) continue // binary, or nothing to do
+  writeFileSync(f, src.replaceAll('@terseui/', '@terseui/'))
   changed++
   console.log('renamed in', f)
 }

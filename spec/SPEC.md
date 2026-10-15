@@ -152,9 +152,9 @@ src/
 
 ## Toolchain
 
-- `@terse/vite-plugin` compiles `*.terse` files during the build, with HMR, source maps that point
+- `@terseui/vite-plugin` compiles `*.terse` files during the build, with HMR, source maps that point
   to `.terse` lines, and errors in the Vite overlay. Add
-  `/// <reference types="@terse/vite-plugin/client" />` (or add it to tsconfig `types`) so that
+  `/// <reference types="@terseui/vite-plugin/client" />` (or add it to tsconfig `types`) so that
   `import X from "./x.terse"` type-checks.
 - The adapters are set in `terse.config.ts`:
   `defineConfig({ components: shadcn(), style: tailwind() })`. A `ComponentAdapter` maps IR

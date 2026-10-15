@@ -1,6 +1,6 @@
-import { shadcn } from '@terse/adapter-shadcn'
-import { tailwind } from '@terse/style-tailwind'
-import { COMPONENTS } from '@terse/core'
+import { shadcn } from '@terseui/adapter-shadcn'
+import { tailwind } from '@terseui/style-tailwind'
+import { COMPONENTS } from '@terseui/core'
 import { describe, expect, it } from 'vitest'
 import { compile, type ComponentAdapter } from '../src/index.js'
 

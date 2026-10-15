@@ -1,5 +1,5 @@
 {
-  "name": "@terse/core",
+  "name": "@terseui/core",
   "version": "0.1.0",
   "description": "Terse language core: lexer, parser, IR and validator. No React dependency.",
   "license": "MIT",

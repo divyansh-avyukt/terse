@@ -1,5 +1,5 @@
-import type { StyleAdapter } from '@terse/compiler'
-import type { StyleToken } from '@terse/core'
+import type { StyleAdapter } from '@terseui/compiler'
+import type { StyleToken } from '@terseui/core'
 
 // Full class names only (no string building) so Tailwind's scanner finds them in this file.
 const GAP = { none: 'gap-0', xs: 'gap-1', sm: 'gap-2', md: 'gap-4', lg: 'gap-6', xl: 'gap-8' }

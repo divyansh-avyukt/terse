@@ -1,12 +1,12 @@
 // Copy that isn't measured: install snippets, the agent prompt and CLAUDE.md excerpt.
 export const GITHUB = 'https://github.com/AVYUKT-TECH-LABS/terse'
 
-export const INSTALL = `pnpm add -D @terse/vite-plugin \\
-  @terse/adapter-shadcn @terse/style-tailwind`
+export const INSTALL = `pnpm add -D @terseui/vite-plugin \\
+  @terseui/adapter-shadcn @terseui/style-tailwind`
 
-export const VITE_CONFIG = `import terse from '@terse/vite-plugin'
-import { shadcn } from '@terse/adapter-shadcn'
-import { tailwind } from '@terse/style-tailwind'
+export const VITE_CONFIG = `import terse from '@terseui/vite-plugin'
+import { shadcn } from '@terseui/adapter-shadcn'
+import { tailwind } from '@terseui/style-tailwind'
 
 export default defineConfig({
   plugins: [
@@ -22,9 +22,9 @@ card "Hello, Terse" description="A shadcn card in four lines."
   text @user.greeting
   button "Wave" variant=outline on=@onWave`
 
-export const TERSE_CONFIG = `import { shadcn } from '@terse/adapter-shadcn'
-import { tailwind } from '@terse/style-tailwind'
-import { defineConfig } from '@terse/vite-plugin'
+export const TERSE_CONFIG = `import { shadcn } from '@terseui/adapter-shadcn'
+import { tailwind } from '@terseui/style-tailwind'
+import { defineConfig } from '@terseui/vite-plugin'
 
 // The compiler only talks to these two interfaces.
 // Swap them to target another design system.
@@ -79,8 +79,8 @@ export const CLAUDE_MD = `## UI is written in Terse
 export const PROMPT = `Build a web app in this empty directory, using Terse for all UI.
 
 Setup: create a Vite + React + TypeScript app with Tailwind v4 and shadcn/ui,
-then add Terse (pnpm add -D @terse/vite-plugin @terse/adapter-shadcn
-@terse/style-tailwind) and register terse({ components: shadcn(), style: tailwind() })
+then add Terse (pnpm add -D @terseui/vite-plugin @terseui/adapter-shadcn
+@terseui/style-tailwind) and register terse({ components: shadcn(), style: tailwind() })
 in vite.config.ts. Read https://terse-ui.dev/llms.txt in full first; those are
 the only components and props that exist.
 

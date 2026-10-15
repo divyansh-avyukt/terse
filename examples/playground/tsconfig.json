@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "allowImportingTsExtensions": true,
-    "types": ["vite/client", "@terse/vite-plugin/client", "node"],
+    "types": ["vite/client", "@terseui/vite-plugin/client", "node"],
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src", "vite.config.ts", "terse.config.ts"]

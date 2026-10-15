@@ -1,5 +1,5 @@
 {
-  "name": "@terse/adapter-shadcn",
+  "name": "@terseui/adapter-shadcn",
   "version": "0.1.0",
   "description": "Terse component adapter that renders shadcn/ui components.",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@terse/core": "workspace:*",
-    "@terse/compiler": "workspace:*"
+    "@terseui/core": "workspace:*",
+    "@terseui/compiler": "workspace:*"
   }
 }

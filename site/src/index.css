@@ -5,8 +5,8 @@
 @import "@fontsource-variable/geist-mono";
 
 /* Compiled .terse views use classes from the adapters; let Tailwind see them. */
-@source "../node_modules/@terse/adapter-shadcn/src";
-@source "../node_modules/@terse/style-tailwind/src";
+@source "../node_modules/@terseui/adapter-shadcn/src";
+@source "../node_modules/@terseui/style-tailwind/src";
 
 @custom-variant dark (&:is(.dark *));
 

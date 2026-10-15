@@ -1,4 +1,4 @@
-// Live diagnostics: runs the real Terse front end (@terse/core) on every edit,
+// Live diagnostics: runs the real Terse front end (@terseui/core) on every edit,
 // so the editor reports exactly what the compiler would.
 const vscode = require('vscode')
 const path = require('node:path')

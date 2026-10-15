@@ -1,5 +1,5 @@
 {
-  "name": "@terse/style-tailwind",
+  "name": "@terseui/style-tailwind",
   "version": "0.1.0",
   "description": "Terse style adapter that maps design tokens to Tailwind classes.",
   "license": "MIT",
@@ -40,7 +40,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@terse/core": "workspace:*",
-    "@terse/compiler": "workspace:*"
+    "@terseui/core": "workspace:*",
+    "@terseui/compiler": "workspace:*"
   }
 }
