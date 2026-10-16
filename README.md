@@ -1,14 +1,19 @@
 <div align="center">
 
-# Terse
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.svg">
+    <img src="docs/assets/logo-light.svg" alt="Terse" width="340">
+  </picture>
+</h1>
 
 **Build React UIs with 75% fewer agent tokens.**
 
 Terse is the UI language your coding agent writes in. It compiles at build time to the same
 React + shadcn/ui + Tailwind your agent would otherwise write, with **zero runtime**.
 
-[![npm](https://img.shields.io/npm/v/@terseui/vite-plugin?label=%40terseui&color=ff7b5c)](https://www.npmjs.com/package/@terseui/vite-plugin)
-[![create-terse-app](https://img.shields.io/npm/v/create-terse-app?label=create-terse-app&color=ff7b5c)](https://www.npmjs.com/package/create-terse-app)
+[![npm](https://img.shields.io/npm/v/@terseui/vite-plugin?label=%40terseui&color=6744F3)](https://www.npmjs.com/package/@terseui/vite-plugin)
+[![create-terse-app](https://img.shields.io/npm/v/create-terse-app?label=create-terse-app&color=6744F3)](https://www.npmjs.com/package/create-terse-app)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![React](https://img.shields.io/badge/React-19-58c4dc)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff)](https://vite.dev)
