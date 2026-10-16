@@ -2,10 +2,10 @@
 
 # Terse
 
-**The UI language your coding agent writes in.**
+**Build React UIs with 75% fewer agent tokens.**
 
-A tiny, presentation-only language that compiles at build time to the React + shadcn/ui + Tailwind
-your agent would otherwise write, with **~75% fewer tokens** and **zero runtime**.
+Terse is the UI language your coding agent writes in. It compiles at build time to the same
+React + shadcn/ui + Tailwind your agent would otherwise write, with **zero runtime**.
 
 [![npm](https://img.shields.io/npm/v/@terseui/vite-plugin?label=%40terseui&color=ff7b5c)](https://www.npmjs.com/package/@terseui/vite-plugin)
 [![create-terse-app](https://img.shields.io/npm/v/create-terse-app?label=create-terse-app&color=ff7b5c)](https://www.npmjs.com/package/create-terse-app)
