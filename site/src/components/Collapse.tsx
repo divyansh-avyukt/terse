@@ -21,7 +21,7 @@ function useCount(to: number, ms = 1100) {
     const a = from.current
     let raf = 0
     const tick = (t: number) => {
-      const k = Math.min(1, (t - start) / ms)
+      const k = Math.min(1, Math.max(0, (t - start) / ms)) // a frame can be timestamped before start
       setN(a + (to - a) * (1 - Math.pow(1 - k, 3)))
       if (k < 1) raf = requestAnimationFrame(tick)
       else from.current = to

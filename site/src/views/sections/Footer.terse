@@ -1,10 +1,11 @@
+use Logo from "@/components/Logo"
 props pageStats, github
 
 band pad=md tone=muted gap=md
   row justify=between wrap=true gap=lg align=start
     col gap=xs
       row gap=sm
-        text "**terse**" size=lg
+        Logo
         badge "v0" tone=muted
       text "The UI language for coding agents." tone=muted
       text @pageStats size=sm tone=muted

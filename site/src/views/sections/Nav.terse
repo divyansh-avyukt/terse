@@ -1,9 +1,10 @@
+use Logo from "@/components/Logo"
 props sourceLabel, onSource, themeLabel, onTheme, github
 
 band pad=xs
   row justify=between
     row gap=sm
-      text "**terse**" size=lg
+      Logo
       badge "v0" tone=muted
     row gap=xs
       button "Benchmarks" href="#benchmarks" variant=ghost size=sm
